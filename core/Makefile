@@ -12,7 +12,9 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	main.cpp
+SRC_FILES=	main.cpp	\
+		Process.cpp	\
+		ProcessList.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
