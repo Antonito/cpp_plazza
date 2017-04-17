@@ -26,7 +26,14 @@ public:
   void stopAll();
 
   template <typename F, typename... Args>
-  bool execute(F func, Args &&... args);
+  bool execute(F func, Args &&... args)
+  {
+    m_mut.lock();
+    m_orders.push(std::bind(func, std::forward<Args>(args)...));
+    m_mut.unlock();
+    m_sem.post();
+    return (true);
+  }
 
   size_t getNumberThreads() const;
   Thread &operator[](size_t ndx);

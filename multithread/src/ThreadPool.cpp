@@ -1,6 +1,6 @@
 #include <exception> // TODO: rm
 #include "ThreadPool.hpp"
-
+#include <iostream> // TODO: rm
 ThreadPool::ThreadPool() : m_sem(0), m_running(true)
 {
 }
@@ -8,6 +8,11 @@ ThreadPool::ThreadPool() : m_sem(0), m_running(true)
 ThreadPool::~ThreadPool()
 {
   stopAll();
+}
+
+void hello()
+{
+  std::cout << "Wow !" << std::endl;
 }
 
 void ThreadPool::addThread()
@@ -41,15 +46,6 @@ void ThreadPool::stopAll()
       cur.join();
     }
   m_pool.clear();
-}
-
-template <typename F, typename... Args>
-bool ThreadPool::execute(F func, Args &&... args)
-{
-  m_mut.lock();
-  m_orders.push(std::bind(func, std::forward<Args>(args)...));
-  m_mut.unlock();
-  m_sem.post();
 }
 
 size_t ThreadPool::getNumberThreads() const

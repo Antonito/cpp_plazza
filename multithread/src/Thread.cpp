@@ -2,13 +2,6 @@
 #include "Thread.hpp"
 
 #if __cplusplus >= 201103L
-template <typename F, typename... Args>
-Thread::Thread(F func, Args &&... args)
-    : m_handle(std::bind(func, std::forward(args)...)),
-      m_thread(&Thread::__thread_entry)
-{
-}
-
 Thread::Thread(Thread &&other)
     : m_handle(other.m_handle), m_thread(std::move(other.m_thread))
 {
@@ -73,15 +66,17 @@ void Thread::_thread_class_entry()
 #endif
 }
 
-void *Thread::__thread_entry(void *data)
-{
-  Thread *inst = reinterpret_cast<Thread *>(data);
-
-  inst->_thread_class_entry();
 #if __cplusplus < 201103L
+void *Thread::__thread_entry(void (*handle)(void *), void *data)
+{
+  handle(data);
   pthread_exit(0);
   return (NULL);
-#else
-  return (nullptr);
-#endif
 }
+#else
+void *Thread::__thread_entry(std::function<void()> handle)
+{
+  handle();
+  return (nullptr);
+}
+#endif
