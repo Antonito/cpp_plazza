@@ -15,7 +15,7 @@
 class ThreadPool
 {
 public:
-  ThreadPool();
+  ThreadPool(size_t nbThread = 0);
   ~ThreadPool();
   ThreadPool(ThreadPool const &) = delete;
   ThreadPool &operator=(ThreadPool const &) = delete;

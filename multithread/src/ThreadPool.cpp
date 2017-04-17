@@ -1,19 +1,18 @@
 #include <exception> // TODO: rm
 #include "ThreadPool.hpp"
-#include <iostream> // TODO: rm
-ThreadPool::ThreadPool()
+
+ThreadPool::ThreadPool(size_t nbThread)
     : m_pool(), m_orders(), m_mut(), m_sem(0), m_running(true)
 {
+  for (size_t i = 0; i < nbThread; ++i)
+    {
+      addThread();
+    }
 }
 
 ThreadPool::~ThreadPool()
 {
   stopAll();
-}
-
-void hello()
-{
-  std::cout << "Wow !" << std::endl;
 }
 
 void ThreadPool::addThread()
