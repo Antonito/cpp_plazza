@@ -1,7 +1,8 @@
 #include <exception> // TODO: rm
 #include "ThreadPool.hpp"
 #include <iostream> // TODO: rm
-ThreadPool::ThreadPool() : m_sem(0), m_running(true)
+ThreadPool::ThreadPool()
+    : m_pool(), m_orders(), m_mut(), m_sem(0), m_running(true)
 {
 }
 

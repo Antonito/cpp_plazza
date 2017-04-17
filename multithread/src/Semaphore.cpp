@@ -1,7 +1,12 @@
 #include <exception> // TODO: rm
 #include "Semaphore.hpp"
 
-Semaphore::Semaphore(uint32_t val) : m_count(val)
+Semaphore::Semaphore(uint32_t val)
+    : m_count(val)
+#if __cplusplus >= 201103L
+      ,
+      m_mut(), m_cond()
+#endif
 {
 #if __cplusplus < 201103L
   if (sem_init(&m_sem, 0, val) == -1)

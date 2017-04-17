@@ -2,7 +2,7 @@
 #include <exception> // TODO: rm
 #include "Mutex.hpp"
 
-Mutex::Mutex() : m_locked(false)
+Mutex::Mutex() : m_locked(false), m_mut()
 {
 #if __cplusplus < 201103L
   // We cannot use nullptr ..

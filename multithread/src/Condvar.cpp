@@ -1,7 +1,7 @@
 #include <exception> // TODO: rm
 #include "Condvar.hpp"
 
-Condvar::Condvar()
+Condvar::Condvar() : m_cond(), m_mut()
 {
 #if __cplusplus < 201103L
   // Cannot use nullptr ...
