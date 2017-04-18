@@ -5,6 +5,7 @@
 #include <csignal>
 #include <iostream>
 #include "Process.hpp"
+#include "Logger.hpp"
 
 Process::Process(size_t nbThread)
     : m_pid(0), m_ppid(0), m_pool(), m_running(false), m_nbThread(nbThread),
@@ -13,6 +14,12 @@ Process::Process(size_t nbThread)
 }
 
 Process::~Process()
+{
+}
+
+Process::Process(Process &&other)
+    : m_pid(other.m_pid), m_ppid(other.m_ppid), m_running(other.m_running),
+      m_nbThread(other.m_nbThread), m_lastAction(other.m_lastAction)
 {
 }
 
@@ -50,6 +57,7 @@ bool Process::run()
 	    {
 	      m_pool.addThread();
 	    }
+
 	  try
 	    {
 	      _loop();
@@ -64,6 +72,9 @@ bool Process::run()
 	  exit(0);
 	}
     }
+#if defined(DEBUG)
+  Nope::Log::Debug << "Process started.";
+#endif
   return (true);
 }
 
@@ -75,10 +86,16 @@ bool Process::isRunning() const
 bool Process::wait()
 {
   assert(m_running == true);
+#if defined(DEBUG)
+  Nope::Log::Debug << "Waiting for child process.";
+#endif
   if (::waitpid(m_pid, NULL, 0) == -1)
     {
       return (false);
     }
+#if defined(DEBUG)
+  Nope::Log::Debug << "Child process terminated.";
+#endif
   m_running = false;
   return (true);
 }
@@ -97,6 +114,9 @@ std::chrono::milliseconds Process::getTimeSinceLastAction() const
 void Process::kill()
 {
   assert(m_running == true);
+#if defined(DEBUG)
+  Nope::Log::Debug << "Killing child process.";
+#endif
   ::kill(m_pid, SIGTERM);
   wait();
 }

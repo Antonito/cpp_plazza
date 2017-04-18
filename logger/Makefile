@@ -12,15 +12,13 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	main.cpp	\
-		Process.cpp	\
-		ProcessList.cpp
+SRC_FILES=	Logger.cpp			\
+		LogMessage.cpp			\
+		LogSink.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-INC_DIR=	$(DIR_LIST)			\
-		$(ROOT_DIR)/logger/src/		\
-		$(ROOT_DIR)/multithread/src/
+INC_DIR=	$(DIR_LIST)
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

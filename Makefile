@@ -13,8 +13,11 @@ IPCS=			ipcs
 
 EXCEPTIONS=		exceptions
 
+LOGGER=			logger
+
 ###### Add your projects here #####
 PROJECTS=		./$(COMMON)/					\
+			./$(LOGGER)/					\
 			./$(EXCEPTIONS)					\
 			./$(MULTITHREAD)/				\
 			./$(IPCS)/					\
@@ -39,6 +42,10 @@ all:
 $(COMMON):
 			@$(ECHO) "$(YELLOW)./$(COMMON)/ :$(CLEAR)\n"
 			@$(MAKE) $(ARGS) $(COMMON)
+
+$(LOGGER):
+			@$(ECHO) "$(YELLOW)./$(LOGGER)/ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(LOGGER)
 
 $(EXCEPTIONS):
 			@$(ECHO) "$(YELLOW)./$(EXCEPTIONS)/ :$(CLEAR)\n"

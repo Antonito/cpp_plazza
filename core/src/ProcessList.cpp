@@ -1,4 +1,5 @@
 #include "ProcessList.hpp"
+#include "Logger.hpp"
 
 constexpr std::chrono::seconds ProcessList::timeout;
 
@@ -21,6 +22,9 @@ bool ProcessList::addProcess()
 {
   m_proc.push_back(Process(m_threadPerProcess));
   m_proc.back().run();
+#if defined(DEBUG)
+  Nope::Log::Debug << "Added process to process list";
+#endif
   return (true);
 }
 
