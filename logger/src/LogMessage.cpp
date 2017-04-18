@@ -2,9 +2,9 @@
 #include "Logger.hpp"
 #include "LogMessage.hpp"
 
-namespace Nope
+namespace nope
 {
-  namespace Log
+  namespace log
   {
     LogMessage::LogMessage(Logger *src)
         : time(std::chrono::time_point_cast<std::chrono::milliseconds>(

@@ -13,12 +13,12 @@ int main(int ac, char **av)
 	{
 	  ProcessList processes(static_cast<size_t>(thread_nb));
 
-	  Nope::Log::Logger::start();
+	  nope::log::Logger::start();
 #if defined(DEBUG)
-	  Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_DEBUG;
-	  Nope::Log::Debug << "Starting log";
+	  nope::log::Logger::logLevel = nope::log::LogLevel::LOG_DEBUG;
+	  nope::log::Log(Debug) << "Starting log";
 #else
-	  Nope::log::Logger::logLevel = Nope::Log::LogLevel::LOG_INFO;
+	  nope::log::Logger::logLevel = nope::log::LogLevel::LOG_INFO;
 #endif
 	  // Launch plazza here
 	  while (1)
@@ -36,9 +36,7 @@ int main(int ac, char **av)
 	      // processes.loadbalance();
 	      // Show result
 	    }
-#if defined(DEBUG)
-	  Nope::Log::Debug << "Leaving log";
-#endif
+	  nope::log::Log(Debug) << "Leaving log";
 	  return (0);
 	}
     }

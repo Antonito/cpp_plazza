@@ -6,9 +6,9 @@
 #include <functional>
 #include "LogMessage.hpp"
 
-namespace Nope
+namespace nope
 {
-  namespace Log
+  namespace log
   {
     enum class LogLevel : int;
 

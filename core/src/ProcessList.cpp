@@ -22,9 +22,7 @@ bool ProcessList::addProcess()
 {
   m_proc.push_back(Process(m_threadPerProcess));
   m_proc.back().run();
-#if defined(DEBUG)
-  Nope::Log::Debug << "Added process to process list";
-#endif
+  nope::log::Log(Debug) << "Added process to process list";
   return (true);
 }
 

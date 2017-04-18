@@ -1,9 +1,9 @@
 #include "LogSink.hpp"
 #include "Logger.hpp"
 
-namespace Nope
+namespace nope
 {
-  namespace Log
+  namespace log
   {
     // Do not touch
     std::chrono::time_point<std::chrono::high_resolution_clock,

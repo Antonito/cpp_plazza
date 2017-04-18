@@ -8,9 +8,9 @@
 #include "LogMessage.hpp"
 #include "LogSink.hpp"
 
-namespace Nope
+namespace nope
 {
-  namespace Log
+  namespace log
   {
     enum class LogLevel : int
     {
@@ -60,9 +60,33 @@ namespace Nope
 
     std::ostream &operator<<(std::ostream &os, LogLevel level);
 
+    class EmptyLogger
+    {
+    public:
+      EmptyLogger(LogLevel){};
+      ~EmptyLogger() = default;
+
+      void addSink(LogSink const &){};
+
+#ifdef DEBUG
+      EmptyLogger operator()(std::string &&, size_t)
+      {
+	return *this;
+      };
+#endif
+
+      template <typename T>
+      EmptyLogger operator<<(T const &)
+      {
+	return *this;
+      }
+    };
+
     extern Logger Trace;
 #ifdef DEBUG
     extern Logger Debug;
+#else
+    extern EmptyLogger Debug;
 #endif
     extern Logger Info;
     extern Logger Warning;
