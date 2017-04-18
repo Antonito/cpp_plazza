@@ -13,6 +13,7 @@ int main(int ac, char **av)
 	{
 	  ProcessList processes(static_cast<size_t>(thread_nb));
 
+	  // Starts logger
 	  nope::log::Logger::start();
 #if defined(DEBUG)
 	  nope::log::Logger::logLevel = nope::log::LogLevel::LOG_DEBUG;
@@ -20,6 +21,7 @@ int main(int ac, char **av)
 #else
 	  nope::log::Logger::logLevel = nope::log::LogLevel::LOG_INFO;
 #endif
+
 	  // Launch plazza here
 	  while (1)
 	    {
@@ -32,8 +34,10 @@ int main(int ac, char **av)
 		}
 	      processes.checkTimeout();
 	      // Parse input
+
 	      // Exec
-	      // processes.loadbalance();
+	      processes.loadbalance();
+
 	      // Show result
 	    }
 	  nope::log::Log(Debug) << "Leaving log";

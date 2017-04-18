@@ -1,14 +1,11 @@
 #ifndef PROCESSLIST_HPP_
 #define PROCESSLIST_HPP_
 
-#include <chrono>
 #include "Process.hpp"
 
 class ProcessList
 {
 public:
-  static constexpr std::chrono::seconds timeout = std::chrono::seconds(5);
-
   ProcessList(size_t nbThread);
   ~ProcessList();
 

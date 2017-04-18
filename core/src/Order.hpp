@@ -29,8 +29,8 @@ public:
   void setInfo(Information info);
   Information getInfo() const;
 
-  virtual std::unique_ptr<uint8_t[]> serializa(std::size_t &sizeToFill);
-  virtual void deserialize
+  virtual std::unique_ptr<uint8_t[]> serialize(std::size_t &sizeToFill);
+  virtual void deserialize(std::size_t size, uint32_t *data);
 
 private:
   std::vector<std::string> m_files;

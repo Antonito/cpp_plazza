@@ -35,7 +35,8 @@ public:
   {
     this->fillData(obj);
   }
-  ~Message()
+  
+  virtual ~Message()
   {
   }
 
