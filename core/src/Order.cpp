@@ -48,7 +48,7 @@ Information Order::getInfo() const
   return (m_info);
 }
 
-std::unique_ptr<uint8_t[]> Order::serialize(size_t &sizeToFill)
+std::unique_ptr<uint8_t[]> Order::serialize(size_t &sizeToFill) const
 {
   sizeToFill = 0;
 

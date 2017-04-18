@@ -8,7 +8,7 @@ class ISerializable
 {
 public:
   virtual ~ISerializable() {};
-  virtual std::unique_ptr<uint8_t[]> serialize(size_t &sizeToFill) = 0;
+  virtual std::unique_ptr<uint8_t[]> serialize(size_t &sizeToFill) const = 0;
   virtual void deserialize(size_t size, uint8_t *data) = 0;
 };
 
