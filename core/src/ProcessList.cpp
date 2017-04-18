@@ -1,8 +1,6 @@
 #include "ProcessList.hpp"
 #include "Logger.hpp"
 
-constexpr std::chrono::seconds ProcessList::timeout;
-
 ProcessList::ProcessList(size_t nbThread)
     : m_proc(), m_threadPerProcess(nbThread)
 {
@@ -20,6 +18,9 @@ ProcessList &ProcessList::operator++()
 
 bool ProcessList::addProcess()
 {
+#if defined(DEBUG)
+  Nope::Log::Debug << "Pushing";
+#endif
   m_proc.push_back(Process(m_threadPerProcess));
   m_proc.back().run();
 #if defined(DEBUG)
@@ -32,16 +33,22 @@ void ProcessList::checkTimeout()
 {
   for (Process &t : m_proc)
     {
+#if 0
       if (t.getTimeSinceLastAction() >= timeout)
 	{
 	  // TODO: remove process
 	  t.kill();
 	}
+#endif
     }
 }
 
 void ProcessList::loadbalance()
 {
+  if (getNbProcesses() == 0)
+    {
+      addProcess();
+    }
   // TODO
 }
 
