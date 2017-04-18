@@ -18,7 +18,7 @@ int main(int ac, char **av)
 	  Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_DEBUG;
 	  Nope::Log::Debug << "Starting log";
 #else
-	  Nope::log::Logger::logLevel = Nope::Log::LogLevel::LOG_INFO;
+	  Nope::Log::Logger::logLevel = Nope::Log::LogLevel::LOG_INFO;
 #endif
 	  // Launch plazza here
 	  while (1)
