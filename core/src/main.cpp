@@ -1,6 +1,6 @@
+#include <unistd.h>
 #include <iostream>
 #include "ProcessList.hpp"
-#include <unistd.h>
 
 int main(int ac, char **av)
 {
@@ -10,14 +10,24 @@ int main(int ac, char **av)
 
       if (thread_nb > 0)
 	{
-#if 0
-	  Process proc(static_cast<size_t>(thread_nb));
-
-	  proc.run();
-	  proc.wait();
-#endif
+	  ProcessList processes(static_cast<size_t>(thread_nb));
 
 	  // Launch plazza here
+	  while (1)
+	    {
+	      std::string input;
+
+	      std::getline(std::cin, input, '\n');
+	      if (!std::cin)
+		{
+		  break;
+		}
+	      processes.checkTimeout();
+	      // Parse input
+	      // Exec
+	      // processes.loadbalance();
+	      // Show result
+	    }
 	  return (0);
 	}
     }
