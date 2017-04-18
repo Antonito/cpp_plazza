@@ -12,8 +12,7 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	Pipe.cpp		\
-		Socket.cpp
+SRC_FILES=	FileDescriptorCommunicable.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
