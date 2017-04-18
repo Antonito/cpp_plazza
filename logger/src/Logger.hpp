@@ -15,9 +15,7 @@ namespace nope
     enum class LogLevel : int
     {
       LOG_TRACE,
-#ifdef DEBUG
       LOG_DEBUG,
-#endif
       LOG_INFO,
       LOG_WARNING,
       LOG_ERROR
@@ -69,14 +67,14 @@ namespace nope
       void addSink(LogSink const &){};
 
 #ifdef DEBUG
-      EmptyLogger operator()(std::string &&, size_t)
+      inline EmptyLogger operator()(std::string &&, size_t)
       {
 	return *this;
       };
 #endif
 
       template <typename T>
-      EmptyLogger operator<<(T const &)
+      inline EmptyLogger operator<<(T const &)
       {
 	return *this;
       }
