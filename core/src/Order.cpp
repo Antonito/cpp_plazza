@@ -1,10 +1,11 @@
+#include <cstring>
 #include "Order.hpp"
 
-Order::Order()
+Order::Order() : m_files(), m_info(Information::PHONE_NUMBER)
 {
 }
 
-Order::Order(Order const &other)
+Order::Order(Order const &other) : m_files(other.m_files), m_info(other.m_info)
 {
 }
 
@@ -15,17 +16,19 @@ Order::~Order()
 Order &Order::operator=(Order const &other)
 {
   if (this != &other)
-  {
-  }
+    {
+      m_files = other.m_files;
+      m_info = other.m_info;
+    }
   return (*this);
 }
 
-std::string &Order::operator[](std::size_t n)
+std::string &Order::operator[](size_t n)
 {
   return (m_files[n]);
 }
 
-std::size_t Order::size() const
+size_t Order::size() const
 {
   return (m_files.size());
 }
@@ -45,13 +48,97 @@ Information Order::getInfo() const
   return (m_info);
 }
 
-std::unique_ptr<uint8_t[]> Order::serialize(int32_t &sizeToFill)
+std::unique_ptr<uint8_t[]> Order::serialize(size_t &sizeToFill)
 {
-  sizeToFill = 1;
-  return (std::make_unique<uint8_t[]>(1));
+  sizeToFill = 0;
+
+  // Size of the fileCount (number of files)
+  sizeToFill += sizeof(size_t);
+
+  // Size of each string (string_size + string itself)
+  for (std::string const &s : m_files)
+    {
+      sizeToFill += sizeof(size_t) + s.size();
+    }
+
+  // Size of information
+  sizeToFill += sizeof(Information);
+
+  // Allocation
+  std::unique_ptr<uint8_t[]> serial(new uint8_t[sizeToFill]);
+  size_t                     cursor = 0;
+  size_t                     fileCount = m_files.size();
+
+  // Copy the file count
+  std::memcpy(&serial[cursor], &fileCount, sizeof(size_t));
+  cursor += sizeof(size_t);
+
+  // Copy each string
+  for (std::string const &s : m_files)
+    {
+      size_t size = s.size();
+
+      // Size of the string
+      std::memcpy(&serial[cursor], &size, sizeof(size_t));
+      cursor += sizeof(size_t);
+      // The string itself
+      std::memcpy(&serial[cursor], s.c_str(), size);
+      cursor += size;
+    }
+
+  // Copy the information
+  std::memcpy(&serial[cursor], &m_info, sizeof(Information));
+
+  return (serial);
 }
 
-void Order::deserialize(int32_t size, uint32_t *data)
+void Order::deserialize(size_t size, uint8_t *data)
 {
+  size_t fileCount;
+  size_t cursor = 0;
 
+  // Check if data is big enough
+  if (size < sizeof(size_t))
+    {
+      throw std::exception();
+    }
+
+  // Get the file count
+  std::memcpy(&fileCount, &data[cursor], sizeof(size_t));
+  cursor += sizeof(size_t);
+
+  // Loop on each file
+  for (size_t i = 0; i < fileCount; ++i)
+    {
+      size_t len;
+
+      // Check if data is big enough
+      if (size - cursor < sizeof(size_t))
+	{
+	  throw std::exception();
+	}
+
+      // Get the string length
+      std::memcpy(&len, &data[cursor], sizeof(size_t));
+      cursor += sizeof(size_t);
+
+      // Check if data is big enough
+      if (size - cursor < len)
+	{
+	  throw std::exception();
+	}
+
+      // Add the string
+      m_files.emplace_back(reinterpret_cast<char *>(&data[cursor]), len);
+      cursor += len;
+    }
+
+  // Check if data is big enough
+  if (size - cursor < sizeof(Information))
+    {
+      throw std::exception();
+    }
+
+  // Get the information
+  std::memcpy(&m_info, &data[cursor], sizeof(Information));
 }

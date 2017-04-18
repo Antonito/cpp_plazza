@@ -86,7 +86,7 @@ public:
     this->getMessage(obj);
   }
 
-  virtual int32_t getSize() const
+  virtual size_t getSize() const
   {
     return (m_size);
   }
@@ -96,14 +96,14 @@ public:
     return (m_data);
   }
 
-  virtual void setData(int32_t size, std::unique_ptr<uint8_t[]> data)
+  virtual void setData(size_t size, std::unique_ptr<uint8_t[]> data)
   {
     m_size = size;
     m_data = data;
   }
 
 private:
-  int32_t                    m_size;
+  size_t                    m_size;
   std::unique_ptr<uint8_t[]> m_data;
 };
 
