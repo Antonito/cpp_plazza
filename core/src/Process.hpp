@@ -14,7 +14,6 @@ public:
   Process(Process const &) = delete;
   Process &operator=(Process const &) = delete;
 
-  Process(Process &&);
   Process &operator=(Process &&);
 
   bool run();
