@@ -21,16 +21,16 @@ public:
   ~Order();
   
   Order &operator=(Order const &other);
-  std::string &operator[](std::size_t n);
+  std::string &operator[](int32_t n);
 
-  std::size_t size() const;
+  int32_t size() const;
   void addFile(std::string const &file);
 
   void setInfo(Information info);
   Information getInfo() const;
 
-  virtual std::unique_ptr<uint8_t[]> serialize(std::size_t &sizeToFill);
-  virtual void deserialize(std::size_t size, uint32_t *data);
+  virtual std::unique_ptr<uint8_t[]> serialize(int32_t &sizeToFill);
+  virtual void deserialize(int32_t size, uint32_t *data);
 
 private:
   std::vector<std::string> m_files;
