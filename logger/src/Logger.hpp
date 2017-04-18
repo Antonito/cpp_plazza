@@ -8,16 +8,14 @@
 #include "LogMessage.hpp"
 #include "LogSink.hpp"
 
-namespace Nope
+namespace nope
 {
-  namespace Log
+  namespace log
   {
     enum class LogLevel : int
     {
       LOG_TRACE,
-#ifdef DEBUG
       LOG_DEBUG,
-#endif
       LOG_INFO,
       LOG_WARNING,
       LOG_ERROR
@@ -60,9 +58,33 @@ namespace Nope
 
     std::ostream &operator<<(std::ostream &os, LogLevel level);
 
+    class EmptyLogger
+    {
+    public:
+      EmptyLogger(LogLevel){};
+      ~EmptyLogger() = default;
+
+      void addSink(LogSink const &){};
+
+#ifdef DEBUG
+      inline EmptyLogger operator()(std::string &&, size_t)
+      {
+	return *this;
+      };
+#endif
+
+      template <typename T>
+      inline EmptyLogger operator<<(T const &)
+      {
+	return *this;
+      }
+    };
+
     extern Logger Trace;
 #ifdef DEBUG
     extern Logger Debug;
+#else
+    extern EmptyLogger Debug;
 #endif
     extern Logger Info;
     extern Logger Warning;

@@ -18,14 +18,10 @@ ProcessList &ProcessList::operator++()
 
 bool ProcessList::addProcess()
 {
-#if defined(DEBUG)
-  Nope::Log::Debug << "Pushing";
-#endif
+  nope::log::Log(Debug) << "Pushing";
   m_proc.push_back(Process(m_threadPerProcess));
   m_proc.back().run();
-#if defined(DEBUG)
-  Nope::Log::Debug << "Added process to process list";
-#endif
+  nope::log::Log(Debug) << "Added process to process list";
   return (true);
 }
 

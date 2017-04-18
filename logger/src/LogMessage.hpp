@@ -5,9 +5,9 @@
 #include <string>
 #include <sstream>
 
-namespace Nope
+namespace nope
 {
-  namespace Log
+  namespace log
   {
     class Logger;
 

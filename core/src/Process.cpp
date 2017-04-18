@@ -71,15 +71,11 @@ bool Process::run()
 
 	  // Prevents memory leaks
 	  m_pool.~ThreadPool();
-#if defined(DEBUG)
-	  Nope::Log::Debug << "Exit child process.";
-#endif
+	  nope::log::Log(Debug) << "Exit child process.";
 	  exit(0);
 	}
     }
-#if defined(DEBUG)
-  Nope::Log::Debug << "Process started.";
-#endif
+  nope::log::Log(Debug) << "Process started.";
   return (true);
 }
 
@@ -91,16 +87,12 @@ bool Process::isRunning() const
 bool Process::wait()
 {
   assert(m_running == true);
-#if defined(DEBUG)
-  Nope::Log::Debug << "Waiting for child process.";
-#endif
+  nope::log::Log(Debug) << "Waiting for child process.";
   if (::waitpid(m_pid, NULL, 0) == -1)
     {
       return (false);
     }
-#if defined(DEBUG)
-  Nope::Log::Debug << "Child process terminated.";
-#endif
+  nope::log::Log(Debug) << "Child process terminated.";
   m_running = false;
   return (true);
 }
@@ -112,9 +104,7 @@ void Process::_loop()
     {
       if (hasTimedOut())
 	{
-#if defined(DEBUG)
-	  Nope::Log::Debug << "Process " << m_pid << " timed out.";
-#endif
+	  nope::log::Log(Debug) << "Process " << m_pid << " timed out.";
 	  m_running = false;
 	  break;
 	}
@@ -141,9 +131,7 @@ void Process::kill()
 {
   if (m_running == true)
     {
-#if defined(DEBUG)
-      Nope::Log::Debug << "Killing child process.";
-#endif
+      nope::log::Log(Debug) << "Killing child process.";
       ::kill(m_pid, SIGTERM);
       wait();
     }

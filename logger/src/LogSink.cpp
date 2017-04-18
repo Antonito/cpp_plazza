@@ -6,9 +6,9 @@
 #include "LogSink.hpp"
 #include "Logger.hpp"
 
-namespace Nope
+namespace nope
 {
-  namespace Log
+  namespace log
   {
     LogSink::LogSink(std::function<void(LogMessage const &, LogLevel)> func)
         : m_func(func)
@@ -35,6 +35,9 @@ namespace Nope
 
 	os << level << (time.count() / 1000) << "." << std::setfill('0')
 	   << std::setw(3) << (time.count() % 1000) << "\t" << msg.getMessage()
+#ifdef DEBUG
+	   << "(" << msg.meta << ") : "
+#endif
 	   << std::endl;
       });
     }
@@ -49,6 +52,9 @@ namespace Nope
 
 	*file << level << (time.count() / 1000) << "." << std::setfill('0')
 	      << std::setw(3) << (time.count() % 1000) << "\t"
+#ifdef DEBUG
+	      << "(" << msg.meta << ") : "
+#endif
 	      << msg.getMessage() << std::endl;
       });
     }
