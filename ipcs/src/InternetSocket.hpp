@@ -9,7 +9,7 @@ public:
   virtual ~NetworkSocket(){};
 
   virtual bool write(IMessage const &);
-  virtual bool read(IMessage const &);
+  virtual bool read(IMessage &);
 };
 
 #endif // !INTERNET_SOCKET_HPP_
