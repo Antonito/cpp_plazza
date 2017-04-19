@@ -24,7 +24,7 @@ namespace nope
     Logger Warning(LogLevel::LOG_WARNING);
     Logger Error(LogLevel::LOG_ERROR);
 
-    Logger::Logger(LogLevel level) : m_level(level)
+    Logger::Logger(LogLevel level) : m_sinks(), m_level(level)
     {
     }
 

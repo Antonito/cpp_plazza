@@ -35,7 +35,7 @@ public:
   {
     this->fillData(obj);
   }
-  
+
   virtual ~Message()
   {
   }
@@ -45,7 +45,7 @@ public:
     if (this == &other)
       return (*this);
     m_size = other.m_size;
-    m_data = std::make_unique(m_size);
+    m_data = std::make_unique<uint8_t[]>(m_size);
     std::memcpy(m_data, other.m_data, m_size);
     return (*this);
   }
@@ -72,7 +72,7 @@ public:
 
   void getMessage(T &obj)
   {
-    obj.deserialize(m_size, m_data);
+    obj.deserialize(m_size, m_data.get());
   }
 
   Message &operator<<(T const &obj)
@@ -84,26 +84,27 @@ public:
   Message &operator>>(T &obj)
   {
     this->getMessage(obj);
+    return (*this);
   }
 
-  virtual std::size_t getSize() const
+  virtual size_t getSize() const
   {
     return (m_size);
   }
 
   virtual uint8_t *getData() const
   {
-    return (m_data);
+    return (m_data.get());
   }
 
-  virtual void setData(std::size_t size, std::unique_ptr<uint8_t[]> data)
+  virtual void setData(size_t size, std::unique_ptr<uint8_t[]> data)
   {
     m_size = size;
-    m_data = data;
+    m_data = std::move(data);
   }
 
 private:
-  std::size_t                m_size;
+  size_t                    m_size;
   std::unique_ptr<uint8_t[]> m_data;
 };
 
