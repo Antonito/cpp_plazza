@@ -1,3 +1,4 @@
+#include <iostream>
 #include <cstring>
 #include "Order.hpp"
 
@@ -141,4 +142,52 @@ void Order::deserialize(size_t size, uint8_t *data)
 
   // Get the information
   std::memcpy(&m_info, &data[cursor], sizeof(Information));
+}
+
+bool Order::parse(Order &order, std::stringstream &input)
+{
+  std::string                  curWord;
+  char c;
+  char                         lastChar = ' ';
+  static const std::string info[] = {"PHONE_NUMBER", "EMAIL_ADDRESS",
+                                         "IP_ADDRESS"};
+  int addedFiles = 0;
+
+  order.m_files.clear();
+
+  while (input.get(c) && c != ';')
+    {
+      if ((lastChar == ' ' || lastChar == '\t') && (c != ' ' && c != '\t') && curWord.length() != 0)
+	{
+	  order.m_files.push_back(std::move(curWord));
+	  curWord = "";
+	  addedFiles++;
+	}
+      if (c != ' ' && c != '\t')
+	{
+	  curWord += c;
+	}
+      lastChar = c;
+    }
+
+  if (addedFiles == 0)
+    {
+      return (false);
+    }
+
+  size_t i;
+  for (i = 0; i < sizeof(info) / sizeof(info[0]); ++i)
+    {
+      if (curWord == info[i])
+	{
+	  order.m_info = static_cast<Information>(i);
+	  break;
+	}
+    }
+
+  if (i == sizeof(info) / sizeof(info[0]))
+    {
+      throw std::exception(); // Invalid information type
+    }
+  return (true);
 }

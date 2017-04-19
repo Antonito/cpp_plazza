@@ -1,7 +1,9 @@
 #include <unistd.h>
 #include <iostream>
+#include <sstream>
 #include "ProcessList.hpp"
 #include "Logger.hpp"
+#include "Order.hpp"
 
 int main(int ac, char **av)
 {
@@ -26,6 +28,8 @@ int main(int ac, char **av)
 	  while (1)
 	    {
 	      std::string input;
+	      std::stringstream ss;
+	      Order order;
 
 	      std::getline(std::cin, input, '\n');
 	      if (!std::cin)
@@ -34,6 +38,11 @@ int main(int ac, char **av)
 		}
 	      processes.checkTimeout();
 	      // Parse input
+	      ss << input;
+	      while (Order::parse(order, ss))
+	      {
+		// use order here?
+	      }
 
 	      // Exec
 	      processes.loadbalance();

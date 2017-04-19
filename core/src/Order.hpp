@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <cstddef>
+#include <sstream>
 #include "ISerializable.hpp"
 
 enum Information
@@ -31,6 +32,8 @@ public:
 
   virtual std::unique_ptr<uint8_t[]> serialize(size_t &sizeToFill) const;
   virtual void deserialize(size_t size, uint8_t *data);
+
+  static bool parse(Order &order, std::stringstream &input);
 
 private:
   std::vector<std::string> m_files;
