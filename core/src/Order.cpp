@@ -69,8 +69,8 @@ std::unique_ptr<uint8_t[]> Order::serialize(size_t &sizeToFill) const
 
   // Allocation
   std::unique_ptr<uint8_t[]> serial(new uint8_t[sizeToFill]);
-  uint32_t                   cursor = 0;
-  uint32_t                   fileCount = m_files.size();
+  size_t                     cursor = 0;
+  uint32_t                   fileCount = static_cast<uint32_t>(m_files.size());
 
   // Copy the file count
   toSend = htonl(fileCount);
@@ -80,7 +80,7 @@ std::unique_ptr<uint8_t[]> Order::serialize(size_t &sizeToFill) const
   // Copy each string
   for (std::string const &s : m_files)
     {
-      uint32_t size = s.size();
+      uint32_t size = static_cast<uint32_t>(s.size());
 
       // Size of the string
       toSend = htonl(size);
@@ -102,7 +102,7 @@ void Order::deserialize(size_t size, uint8_t *data)
 {
   uint32_t toHost;
   uint32_t fileCount;
-  uint32_t cursor = 0;
+  size_t   cursor = 0;
 
   // Check if data is big enough
   if (size < sizeof(uint32_t))
