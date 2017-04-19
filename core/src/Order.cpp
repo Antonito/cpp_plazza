@@ -112,7 +112,7 @@ void Order::deserialize(size_t size, uint8_t *data)
 
   // Get the file count
   std::memcpy(&toHost, &data[cursor], sizeof(uint32_t));
-  fileCount = ntonl(toHost);
+  fileCount = ntohl(toHost);
   cursor += sizeof(uint32_t);
 
   // Loop on each file
@@ -128,7 +128,7 @@ void Order::deserialize(size_t size, uint8_t *data)
 
       // Get the string length
       std::memcpy(&toHost, &data[cursor], sizeof(uint32_t));
-      len = ntonl(toHost);
+      len = ntohl(toHost);
       cursor += sizeof(uint32_t);
 
       // Check if data is big enough
@@ -150,7 +150,7 @@ void Order::deserialize(size_t size, uint8_t *data)
 
   // Get the information
   std::memcpy(&toHost, &data[cursor], sizeof(uint32_t));
-  m_info = static_cast<Information>(ntonl(toHost));
+  m_info = static_cast<Information>(ntohl(toHost));
 }
 
 bool Order::parse(Order &order, std::stringstream &input)
