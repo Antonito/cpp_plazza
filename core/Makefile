@@ -14,13 +14,15 @@ DIR_LIST=	$(SRC_DIR)
 
 SRC_FILES=	main.cpp	\
 		Process.cpp	\
-		ProcessList.cpp
+		ProcessList.cpp	\
+		Order.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR=	$(DIR_LIST)			\
 		$(ROOT_DIR)/logger/src/		\
-		$(ROOT_DIR)/multithread/src/
+		$(ROOT_DIR)/multithread/src/	\
+		$(ROOT_DIR)/ipcs/src/
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

@@ -5,9 +5,9 @@
 #include <string>
 #include <sstream>
 
-namespace Nope
+namespace nope
 {
-  namespace Log
+  namespace log
   {
     class Logger;
 
@@ -31,6 +31,8 @@ namespace Nope
 #ifdef DEBUG
       struct Meta
       {
+	Meta();
+	~Meta();
 	std::string file;
 	size_t      line;
       };

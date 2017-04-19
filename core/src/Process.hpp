@@ -9,6 +9,8 @@
 class Process
 {
 public:
+  static constexpr std::chrono::seconds timeout = std::chrono::seconds(5);
+
   explicit Process(size_t nbThread);
   ~Process();
   Process(Process const &) = delete;
@@ -24,8 +26,11 @@ public:
   void kill();
 
   std::chrono::milliseconds getTimeSinceLastAction() const;
+  bool                      hasTimedOut() const;
 
 private:
+  void updateLastAction();
+
   void                                  _loop();
   pid_t                                 m_pid;
   pid_t                                 m_ppid;
