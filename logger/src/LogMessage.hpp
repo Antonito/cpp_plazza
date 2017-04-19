@@ -31,6 +31,8 @@ namespace nope
 #ifdef DEBUG
       struct Meta
       {
+	Meta();
+	~Meta();
 	std::string file;
 	size_t      line;
       };
