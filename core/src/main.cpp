@@ -28,6 +28,7 @@ int main(int ac, char **av)
 
 	  std::signal(SIGPIPE, SIG_IGN);
 	  nope::log::Log(Debug) << "Ignoring SIGPIPE signals";
+
 	  // Launch plazza here
 	  while (1)
 	    {
@@ -41,13 +42,15 @@ int main(int ac, char **av)
 		  break;
 		}
 	      processes.checkTimeout();
+
 	      // Parse input
 	      ss << input;
 	      while (Order::parse(order, ss))
 		{
 		  // Exec
-		  processes.loadbalance();
+		  processes.loadbalance(order);
 		}
+
 	      // Show result
 	    }
 	  nope::log::Log(Debug) << "Leaving log";

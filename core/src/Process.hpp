@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <chrono>
 #include <cassert>
+#include <csignal>
 #include <unistd.h>
 #include "ThreadPool.hpp"
 #include "ICommunicable.hpp"
@@ -15,7 +16,6 @@
 // transiter des IMessages externes.
 // Les messages recus de la part du fils peuvent etre accessibles via une queue
 // de messages stockee dans le process "pere", qui est le process initial.
-// Template Process<UnixSocket> ? :D
 
 template <typename T>
 class Process
@@ -133,7 +133,7 @@ public:
 
   bool hasTimedOut() const
   {
-    return (getTimeSinceLastAction() > Process::timeout);
+    return (getTimeSinceLastAction() > Process<T>::timeout);
   }
 
 private:

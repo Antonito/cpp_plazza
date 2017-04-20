@@ -6,6 +6,9 @@
 #include "Logger.hpp"
 
 template <typename T>
+constexpr std::chrono::seconds Process<T>::timeout;
+
+template <typename T>
 class ProcessList
 {
   static_assert(std::is_base_of<ICommunicable, T>(),
