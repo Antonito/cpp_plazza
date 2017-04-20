@@ -8,7 +8,7 @@ int main(int ac, char **av)
     if (ac > 1)
     {
         order.addFile(av[1]);
-        order.setInfo(Information::EMAIL_ADDRESS);
+        order.setInfo(Information::PHONE_NUMBER);
         worker.exec(order);
     }
 }
