@@ -16,7 +16,7 @@ public:
   Worker(Worker const &) = delete;
   Worker &operator=(Worker const &) = delete;
 
-  void exec(Order &);
+  void exec(Order const &);
 
 private:
   void setReg(Information);
@@ -26,9 +26,9 @@ private:
   bool uncipherXor(uint8_t key);
   bool uncipherCaesar(uint16_t key);
 
-  regex::Regex m_reg;
-  std::string m_data;
-  std::string m_uncipherData;
+  regex::Regex             m_reg;
+  std::string              m_data;
+  std::string              m_uncipherData;
   std::vector<std::string> m_result;
 };
 

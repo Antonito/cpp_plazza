@@ -31,6 +31,11 @@ std::string &Order::operator[](size_t n)
   return (m_files[n]);
 }
 
+std::string const &Order::operator[](size_t n) const
+{
+  return (m_files[n]);
+}
+
 size_t Order::size() const
 {
   return (m_files.size());
