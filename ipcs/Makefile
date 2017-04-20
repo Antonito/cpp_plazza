@@ -12,7 +12,8 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	FileDescriptorCommunicable.cpp
+SRC_FILES=	FileDescriptorCommunicable.cpp	\
+		UnixSocket.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 

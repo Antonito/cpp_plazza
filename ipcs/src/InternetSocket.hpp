@@ -3,10 +3,10 @@
 
 #include "FileDescriptorCommunicable.hpp"
 
-class NetworkSocket : public FileDescriptorCommunicable
+class InternetSocket : public FileDescriptorCommunicable
 {
 public:
-  virtual ~NetworkSocket(){};
+  virtual ~InternetSocket(){};
 
   virtual bool write(IMessage const &);
   virtual bool read(IMessage &);

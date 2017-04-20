@@ -11,6 +11,9 @@ public:
   virtual bool write(IMessage const &) = 0;
   virtual bool read(IMessage &) = 0;
 
+  virtual void configureClient() = 0;
+  virtual void configureHost() = 0;
+
   virtual bool canWrite() const = 0;
   virtual bool canRead() const = 0;
 };

@@ -6,17 +6,20 @@
 class FileDescriptorCommunicable : public ICommunicable
 {
 public:
+  FileDescriptorCommunicable();
   virtual ~FileDescriptorCommunicable(){};
 
   virtual bool write(IMessage const &) = 0;
   virtual bool read(IMessage &) = 0;
+  virtual void configureClient() = 0;
+  virtual void configureHost() = 0;
 
   virtual bool canWrite() const;
   virtual bool canRead() const;
 
 protected:
-  int readFd;
-  int writeFd;
+  int m_readFd;
+  int m_writeFd;
 };
 
 #endif // !FILE_DESCRIPTOR_COMMUNICABLE

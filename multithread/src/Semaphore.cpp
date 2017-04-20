@@ -5,7 +5,7 @@ Semaphore::Semaphore(uint32_t val)
     : m_count(val)
 #if __cplusplus >= 201103L
       ,
-      m_mut(), m_cond()
+      m_mut(new std::mutex()), m_cond(new std::condition_variable())
 #endif
 {
 #if __cplusplus < 201103L
@@ -31,10 +31,10 @@ bool Semaphore::wait()
       return (false);
     }
 #else
-  std::unique_lock<std::mutex> lock(m_mut);
+  std::unique_lock<std::mutex> lock(*m_mut);
   while (m_count == 0)
     {
-      m_cond.wait(lock);
+      m_cond->wait(lock);
     }
 #endif
   --m_count;
@@ -49,8 +49,8 @@ bool Semaphore::post()
       return (false);
     }
 #else
-  std::unique_lock<std::mutex> lock(m_mut);
-  m_cond.notify_one();
+  std::unique_lock<std::mutex> lock(*m_mut);
+  m_cond->notify_one();
 #endif
   ++m_count;
   return (true);
@@ -64,7 +64,7 @@ bool Semaphore::trywait()
       return (false);
     }
 #else
-  std::unique_lock<std::mutex> lock(m_mut);
+  std::unique_lock<std::mutex> lock(*m_mut);
   if (m_count == 0)
     {
       return (false);

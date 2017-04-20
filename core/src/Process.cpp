@@ -31,8 +31,7 @@ Process &Process::operator=(Process &&other)
     {
       m_pid = other.m_pid;
       m_ppid = other.m_ppid;
-      // TODO
-      //      m_pool = std::move(other.m_pool);
+      m_pool = std::move(other.m_pool);
       m_running = other.m_running;
       m_nbThread = other.m_nbThread;
       m_lastAction = other.m_lastAction;
