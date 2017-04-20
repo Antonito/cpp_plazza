@@ -18,8 +18,8 @@ private:
   static constexpr size_t buffSize = 4096;
   enum
   {
-    PIPE_HOST = 0,
-    PIPE_CLIENT,
+    PIPE_READ = 0,
+    PIPE_WRITE,
     NB_PIPES
   };
   int m_pipesIn[NB_PIPES];

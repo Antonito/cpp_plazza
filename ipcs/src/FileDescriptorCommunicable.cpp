@@ -2,7 +2,7 @@
 #include <sys/select.h>
 #include <errno.h>
 #include "FileDescriptorCommunicable.hpp"
-
+// TODO: overload << and >>
 FileDescriptorCommunicable::FileDescriptorCommunicable()
     : m_readFd(-1), m_writeFd(-1)
 {
