@@ -1,6 +1,7 @@
 #ifndef PROCESSLIST_HPP_
 #define PROCESSLIST_HPP_
 
+#include "Order.hpp"
 #include "Process.hpp"
 
 class ProcessList
@@ -21,7 +22,7 @@ public:
   void checkTimeout();
 
   // Handle loadbalancing
-  void loadbalance(); // TODO : Command
+  void loadbalance(Order &ord);
 
 private:
   std::vector<Process> m_proc;

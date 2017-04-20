@@ -39,7 +39,7 @@ void ProcessList::checkTimeout()
     }
 }
 
-void ProcessList::loadbalance()
+void ProcessList::loadbalance(Order &ord)
 {
   if (getNbProcesses() == 0)
     {
