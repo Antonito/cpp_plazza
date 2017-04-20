@@ -5,6 +5,13 @@
 #include <sys/types.h>
 #include <chrono>
 #include "ThreadPool.hpp"
+#include "ICommunicable.hpp"
+
+// TODO: Chaque process possede un ICommunicable dans lequel on peut faire
+// transiter des IMessages externes.
+// Les messages recus de la part du fils peuvent etre accessibles via une queue
+// de messages stockee dans le process "pere", qui est le process initial.
+// Template Process<UnixSocket> ? :D
 
 class Process
 {

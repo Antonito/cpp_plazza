@@ -1,4 +1,4 @@
-#include <unistd.h>
+#include <csignal>
 #include <iostream>
 #include <sstream>
 #include "ProcessList.hpp"
@@ -24,6 +24,8 @@ int main(int ac, char **av)
 	  nope::log::Logger::logLevel = nope::log::LogLevel::LOG_INFO;
 #endif
 
+	  std::signal(SIGPIPE, SIG_IGN);
+	  nope::log::Log(Debug) << "Ignoring SIGPIPE signals";
 	  // Launch plazza here
 	  while (1)
 	    {
