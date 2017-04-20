@@ -15,12 +15,14 @@ DIR_LIST=	$(SRC_DIR)
 SRC_FILES=	main.cpp	\
 		Process.cpp	\
 		ProcessList.cpp	\
-		Order.cpp
+		Order.cpp	\
+		Worker.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
 INC_DIR=	$(DIR_LIST)			\
 		$(ROOT_DIR)/logger/src/		\
+		$(ROOT_DIR)/regex/src/		\
 		$(ROOT_DIR)/multithread/src/	\
 		$(ROOT_DIR)/ipcs/src/
 

@@ -2,31 +2,34 @@
 
 namespace regex
 {
-bool Regex::match(std::string const &line, std::string const &pattern)
+
+Regex::Regex() : m_match(), m_regex()
 {
-
-    // #if __cplusplus < 201103L
-
-    //     regex_t reg;
-    //     int ret;
-
-    //     if (regcomp(&reg, pattern.c_str(), REG_EXTENDED) != 0)
-    //         return false;
-    //     ret = regexec(&re, line.c_str(), 0, NULL, 0);
-    //     if (ret == 0)
-    //         return true;
-    //     return false;
-
-    // #else
-
-    return (std::regex_match(line, std::regex(pattern)));
 }
 
-bool Regex::search(std::string &input, std::string const &pattern)
+Regex::Regex(std::string const &pattern) : m_match(), m_regex(std::regex(pattern))
 {
-    if (regex_search(input, m_match, std::regex(pattern)))
+}
+
+Regex::~Regex()
+{
+}
+
+bool Regex::match(std::string const &line) const
+{
+    return (std::regex_match(line, m_regex));
+}
+
+bool Regex::search(std::string &input)
+{
+    if (regex_search(input, m_match, m_regex))
         return (false);
     input = m_match.suffix();
     return (true);
+}
+
+std::string Regex::replace(std::string const &input, std::string const &replace) const
+{
+    return (std::regex_replace(input, m_regex, replace));
 }
 }

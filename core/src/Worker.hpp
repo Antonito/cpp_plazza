@@ -2,28 +2,33 @@
 #define WORKER_HPP_
 
 #include <cstddef>
+#include <vector>
+#include <string>
+#include "Order.hpp"
+#include "Regex.hpp"
 
 class Worker
 {
 public:
-  static constexpr std::chrono::seconds timeout = std::chrono::seconds(5);
-
-  Worker(size_t nbThread);
+  Worker();
   ~Worker();
 
   Worker(Worker const &) = delete;
   Worker &operator=(Worker const &) = delete;
 
-  void exec();
+  void exec(Order const &);
 
 private:
-  void setReg();
+  void setReg(Information);
+  void loadFile(std::string const &);
+  void fillResult();
   void uncipher();
   bool uncipherXor(uint8_t key);
   bool uncipherCaesar(uint16_t key);
 
-  Regex m_reg;
+  regex::Regex m_reg;
   std::string m_data;
+  std::string m_uncipherData;
   std::vector<std::string> m_result;
 };
 

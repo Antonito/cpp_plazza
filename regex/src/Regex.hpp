@@ -3,31 +3,29 @@
 
 #include <string>
 #include <iostream>
-
-#if __cplusplus < 201103L
-#include <regex.h>
-#else
 #include <regex>
-#endif
 
 namespace regex
 {
 class Regex
 {
 public:
-  Regex(){};
+  Regex();
+  Regex(std::string const &);
   ~Regex();
 
 #if __cplusplus >= 201103L
   Regex(Regex const &) = delete;
-  Regex &operator=(Regex const &) = delete;
+  Regex &operator=(Regex const &) = default;
 #endif
 
-  bool match(std::string const &, std::string const &);
-  bool search(std::string &, std::string const &);
+  bool match(std::string const &) const;
+  bool search(std::string &);
+  std::string replace(std::string const &, std::string const &) const;
 
 private:
   std::smatch m_match;
+  std::regex m_regex;
 };
 }
 
