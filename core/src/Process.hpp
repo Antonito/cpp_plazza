@@ -72,6 +72,7 @@ public:
 	if (m_pid == 0)
 	  {
 	    // Child !
+	    m_mes.configureClient();
 	    m_pid = getpid();
 	    for (size_t i = 0; i < m_nbThread; ++i)
 	      {
@@ -93,6 +94,7 @@ public:
 	    exit(0);
 	  }
       }
+    m_mes.configureHost();
     nope::log::Log(Debug) << "Process started.";
     return (true);
   }
