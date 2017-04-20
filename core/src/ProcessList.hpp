@@ -44,6 +44,16 @@ public:
     return (m_proc.size());
   }
 
+  void wait()
+  {
+    nope::log::Log(Debug) << "Waiting all processes to finish.";
+    for (Process<T> &t : m_proc)
+      {
+	t.wait();
+      }
+    nope::log::Log(Debug) << "All processes are finished.";
+  }
+
   // Handle timeout
   void checkTimeout()
   {

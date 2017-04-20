@@ -40,6 +40,7 @@ int main(int ac, char **av)
 	      std::getline(std::cin, input, '\n');
 	      if (!std::cin)
 		{
+		  processes.wait();
 		  break;
 		}
 	      processes.checkTimeout();
