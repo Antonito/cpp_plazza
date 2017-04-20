@@ -5,6 +5,7 @@
 #include <pthread.h>
 #else
 #include <mutex>
+#include <memory>
 #endif
 
 class Mutex
@@ -15,6 +16,8 @@ public:
 #if __cplusplus >= 201103L
   Mutex(Mutex const &) = delete;
   Mutex &operator=(Mutex const &) = delete;
+  Mutex(Mutex &&) = default;
+  Mutex &operator=(Mutex &&) = default;
 #endif
 
   bool lock();
@@ -35,7 +38,7 @@ private:
 #if __cplusplus < 201103L
   pthread_mutex_t m_mut;
 #else
-  std::mutex  m_mut;
+  std::unique_ptr<std::mutex>  m_mut;
 #endif
 };
 

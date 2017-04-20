@@ -27,9 +27,9 @@ int main(int ac, char **av)
 	  // Launch plazza here
 	  while (1)
 	    {
-	      std::string input;
+	      std::string       input;
 	      std::stringstream ss;
-	      Order order;
+	      Order             order;
 
 	      std::getline(std::cin, input, '\n');
 	      if (!std::cin)
@@ -40,13 +40,10 @@ int main(int ac, char **av)
 	      // Parse input
 	      ss << input;
 	      while (Order::parse(order, ss))
-	      {
-		// use order here?
-	      }
-
-	      // Exec
-	      processes.loadbalance();
-
+		{
+		  // Exec
+		  processes.loadbalance();
+		}
 	      // Show result
 	    }
 	  nope::log::Log(Debug) << "Leaving log";
