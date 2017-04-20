@@ -12,18 +12,11 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	main.cpp	\
-		Order.cpp	\
-		Worker.cpp	\
-		Response.cpp
+SRC_FILES=	Regex.cpp			\
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-INC_DIR=	$(DIR_LIST)			\
-		$(ROOT_DIR)/logger/src/		\
-		$(ROOT_DIR)/regex/src/		\
-		$(ROOT_DIR)/multithread/src/	\
-		$(ROOT_DIR)/ipcs/src/
+INC_DIR=	$(DIR_LIST)
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

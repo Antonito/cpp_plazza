@@ -1,9 +1,10 @@
-#include <unistd.h>
+#include <csignal>
 #include <iostream>
 #include <sstream>
 #include "ProcessList.hpp"
 #include "Logger.hpp"
 #include "Order.hpp"
+#include "UnixSocket.hpp"
 
 int main(int ac, char **av)
 {
@@ -13,7 +14,8 @@ int main(int ac, char **av)
 
       if (thread_nb > 0)
 	{
-	  ProcessList processes(static_cast<size_t>(thread_nb));
+	  // You can change communication type here
+	  ProcessList<UnixSocket> processes(static_cast<size_t>(thread_nb));
 
 	  // Starts logger
 	  nope::log::Logger::start();
@@ -23,6 +25,9 @@ int main(int ac, char **av)
 #else
 	  nope::log::Logger::logLevel = nope::log::LogLevel::LOG_INFO;
 #endif
+
+	  std::signal(SIGPIPE, SIG_IGN);
+	  nope::log::Log(Debug) << "Ignoring SIGPIPE signals";
 
 	  // Launch plazza here
 	  while (1)
@@ -37,6 +42,7 @@ int main(int ac, char **av)
 		  break;
 		}
 	      processes.checkTimeout();
+
 	      // Parse input
 	      ss << input;
 	      while (Order::parse(order, ss))
@@ -44,6 +50,7 @@ int main(int ac, char **av)
 		  // Exec
 		  processes.loadbalance(order);
 		}
+
 	      // Show result
 	    }
 	  nope::log::Log(Debug) << "Leaving log";

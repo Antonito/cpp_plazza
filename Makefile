@@ -15,9 +15,12 @@ EXCEPTIONS=		exceptions
 
 LOGGER=			logger
 
+REGEX=			regex
+
 ###### Add your projects here #####
 PROJECTS=		./$(COMMON)/					\
 			./$(LOGGER)/					\
+			./$(REGEX)/					\
 			./$(EXCEPTIONS)					\
 			./$(MULTITHREAD)/				\
 			./$(IPCS)/					\
@@ -44,6 +47,10 @@ $(COMMON):
 			@$(MAKE) $(ARGS) $(COMMON)
 
 $(LOGGER):
+			@$(ECHO) "$(YELLOW)./$(LOGGER)/ :$(CLEAR)\n"
+			@$(MAKE) $(ARGS) $(LOGGER)
+
+$(REGEX):
 			@$(ECHO) "$(YELLOW)./$(LOGGER)/ :$(CLEAR)\n"
 			@$(MAKE) $(ARGS) $(LOGGER)
 
