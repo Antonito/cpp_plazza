@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include "Pipe.hpp"
+#include "CommunicationError.hpp"
 
 constexpr size_t Pipe::buffSize;
 
@@ -10,7 +11,7 @@ Pipe::Pipe() : FileDescriptorCommunicable(), m_pipesIn(), m_pipesOut()
 {
   if (pipe(m_pipesIn) == -1 || pipe(m_pipesOut) == -1)
     {
-      throw std::exception(); // TODO
+      throw CommunicationError("Cannot open pipe"); // TODO: adjust error message?
     }
 }
 

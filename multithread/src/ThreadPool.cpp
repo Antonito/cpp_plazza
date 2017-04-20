@@ -1,4 +1,4 @@
-#include <exception> // TODO: rm
+#include <exception>
 #include "ThreadPool.hpp"
 
 ThreadPool::ThreadPool(size_t nbThread)
@@ -69,7 +69,7 @@ Thread &ThreadPool::operator[](size_t ndx)
 {
   if (ndx > getNumberThreads())
     {
-      throw std::exception(); // TODO
+      throw std::out_of_range("Tried to access inexistant thread"); // TODO: adjust message?
     }
   return (m_pool[ndx]);
 }

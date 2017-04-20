@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include "InternetSocket.hpp"
+#include "CommunicationError.hpp"
 
 constexpr size_t InternetSocket::buffSize;
 
@@ -11,7 +12,7 @@ InternetSocket::InternetSocket() : FileDescriptorCommunicable(), m_socks()
 {
   if (socketpair(AF_INET, SOCK_STREAM, 0, m_socks) == -1)
     {
-      throw std::exception(); // TODO
+      throw CommunicationError("Failed to open socket"); // TODO: adjust error message
     }
 }
 

@@ -1,6 +1,8 @@
 #include <arpa/inet.h>
 #include <cstring>
+#include <exception>
 #include "Response.hpp"
+#include "SerializerError.hpp"
 
 Response::Response() : m_infos()
 {
@@ -64,7 +66,7 @@ void Response::deserialize(size_t size, uint8_t *data)
 
   if (size - cursor < sizeof(uint32_t))
     {
-      throw std::exception();
+      throw SerializerError("Not enough data to deserialize");
     }
 
   std::memcpy(&received, &data[cursor], sizeof(uint32_t));
@@ -78,7 +80,7 @@ void Response::deserialize(size_t size, uint8_t *data)
 
       if (size - cursor < sizeof(uint32_t))
 	{
-	  throw std::exception();
+	  throw SerializerError("Not enough data to deserialize");
 	}
       std::memcpy(&received, &data[cursor], sizeof(uint32_t));
       cursor += sizeof(uint32_t);
