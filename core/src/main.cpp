@@ -4,6 +4,7 @@
 #include "ProcessList.hpp"
 #include "Logger.hpp"
 #include "Order.hpp"
+#include "OrderList.hpp"
 #include "UnixSocket.hpp"
 
 int main(int ac, char **av)
@@ -34,7 +35,7 @@ int main(int ac, char **av)
 	    {
 	      std::string       input;
 	      std::stringstream ss;
-	      Order             order;
+	      OrderList         orderList;
 
 	      std::getline(std::cin, input, '\n');
 	      if (!std::cin)
@@ -45,10 +46,13 @@ int main(int ac, char **av)
 
 	      // Parse input
 	      ss << input;
-	      while (Order::parse(order, ss))
+	      while (OrderList::parse(orderList, ss))
 		{
 		  // Exec
-		  processes.loadbalance(order);
+		  for (size_t i = 0; i < orderList.size(); ++i)
+		    {
+		      processes.loadbalance(orderList.getOrder(i));
+		    }
 		}
 
 	      // Show result

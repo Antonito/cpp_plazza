@@ -14,6 +14,7 @@ DIR_LIST=	$(SRC_DIR)
 
 SRC_FILES=	main.cpp	\
 		Order.cpp	\
+		OrderList.cpp	\
 		Worker.cpp	\
 		Response.cpp
 

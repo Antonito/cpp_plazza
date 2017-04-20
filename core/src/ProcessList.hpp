@@ -60,7 +60,7 @@ public:
   }
 
   // Handle loadbalancing
-  void loadbalance(Order &ord)
+  void loadbalance(Order const &ord)
   {
     if (getNbProcesses() == 0)
       {
