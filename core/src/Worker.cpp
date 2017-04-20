@@ -13,6 +13,7 @@ Worker::~Worker()
 
 void Worker::exec(Order const &order)
 {
+  std::cout << "File: " << order.getFile() << std::endl;
   setReg(order.getInfo());
   loadFile(order.getFile());
   uncipher();

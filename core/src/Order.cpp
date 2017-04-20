@@ -2,6 +2,10 @@
 #include <cstring>
 #include "Order.hpp"
 
+Order::Order() : m_file(""), m_info(PHONE_NUMBER)
+{
+}
+
 Order::Order(std::string const &file, Information info)
     : m_file(file), m_info(info)
 {

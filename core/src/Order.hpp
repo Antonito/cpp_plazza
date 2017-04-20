@@ -14,6 +14,7 @@ enum Information
 class Order : public ISerializable
 {
 public:
+  Order();
   Order(std::string const &file, Information type);
   Order(Order const &other);
   virtual ~Order();
@@ -24,7 +25,7 @@ public:
   virtual void deserialize(size_t size, uint8_t *data);
 
   std::string const &getFile() const;
-  Information getInfo() const;
+  Information        getInfo() const;
 
 private:
   std::string m_file;
