@@ -2,9 +2,6 @@
 #define ORDER_HPP_
 
 #include <string>
-#include <vector>
-#include <cstddef>
-#include <sstream>
 #include "ISerializable.hpp"
 
 enum Information
@@ -17,28 +14,21 @@ enum Information
 class Order : public ISerializable
 {
 public:
-  Order();
+  Order(std::string const &file, Information type);
   Order(Order const &other);
-  ~Order();
+  virtual ~Order();
 
   Order &operator=(Order const &other);
-  std::string &operator[](size_t n);
-  std::string const &operator[](size_t n) const;
-
-  size_t size() const;
-  void addFile(std::string const &file);
-
-  void setInfo(Information info);
-  Information getInfo() const;
 
   virtual std::unique_ptr<uint8_t[]> serialize(size_t &sizeToFill) const;
   virtual void deserialize(size_t size, uint8_t *data);
 
-  static bool parse(Order &order, std::stringstream &input);
+  std::string const &getFile() const;
+  Information getInfo() const;
 
 private:
-  std::vector<std::string> m_files;
-  Information              m_info;
+  std::string m_file;
+  Information m_info;
 };
 
 #endif // !ORDER_HPP_

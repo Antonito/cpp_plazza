@@ -60,7 +60,7 @@ public:
   }
 
   // Handle loadbalancing
-  void loadbalance(Order &ord)
+  void loadbalance(Order const &ord)
   {
     // TODO: Loadbalance
     bool sent = false;

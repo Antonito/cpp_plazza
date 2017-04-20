@@ -13,12 +13,9 @@ Worker::~Worker()
 
 void Worker::exec(Order const &order)
 {
-  if (order.size() > 0)
-    {
-      setReg(order.getInfo());
-      loadFile(order[0]);
-      uncipher();
-    }
+  setReg(order.getInfo());
+  loadFile(order.getFile());
+  uncipher();
 }
 
 void Worker::setReg(Information info)

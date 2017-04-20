@@ -10,16 +10,22 @@ public:
   Response();
   Response(Response const &other);
   virtual ~Response();
-  
+
   Response &operator=(Response const &other);
 
   virtual std::unique_ptr<uint8_t[]> serialize(size_t &sizeToFill);
   virtual void deserialize(size_t size, uint8_t *data);
+
 private:
-  // First vector represent process
-  // Second one represent each thread
-  // The bool indicate if the thread is busy
-  std::vector<std::vector<bool>> m_infos;
+  struct Info
+  {
+    uint32_t busy;
+    uint32_t waiting;
+    uint32_t processing;
+    uint32_t processed;
+  };
+
+  std::vector<Info> m_infos;
 };
 
 #endif // !RESPONSE_HPP_
