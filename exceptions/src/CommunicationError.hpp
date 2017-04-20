@@ -6,7 +6,7 @@
 class CommunicationError : public AException
 {
 public:
-  CommunicationError(std::string const &msg = "");
+  CommunicationError(std::string const &msg = "") noexcept;
   virtual ~CommunicationError();
 };
 

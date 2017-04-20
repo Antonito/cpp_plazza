@@ -1,5 +1,5 @@
-#include <exception>
 #include "Thread.hpp"
+#include "ThreadError.hpp"
 
 #if __cplusplus >= 201103L
 Thread::Thread(Thread &&other)
@@ -22,7 +22,7 @@ Thread::Thread(void (*func)(void *), void *data) : m_handle(func), m_arg(data)
 {
   if (pthread_create(&m_thread, NULL, &Thread::__thread_entry, this) == -1)
     {
-      throw std::exception(); // TODO
+      throw ThreadError("Cannot create new thread"); // TODO: adjust message?
     }
 }
 #endif

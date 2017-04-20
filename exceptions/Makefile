@@ -13,7 +13,8 @@ DIR_LIST=	$(SRC_DIR)
 # Project's files
 
 SRC_FILES=	AException.cpp		\
-		CommunicationError.cpp
+		CommunicationError.cpp	\
+		ThreadError.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 

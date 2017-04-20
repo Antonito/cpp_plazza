@@ -20,7 +20,8 @@ SRC_FILES=	Condvar.cpp			\
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-INC_DIR=	$(DIR_LIST)
+INC_DIR=	$(DIR_LIST)			\
+		$(ROOT_DIR)/exceptions/src/
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

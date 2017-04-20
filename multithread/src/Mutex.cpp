@@ -1,6 +1,6 @@
 #include <cassert>
-#include <exception> // TODO: rm
 #include "Mutex.hpp"
+#include "ThreadError.hpp"
 
 Mutex::Mutex() : m_locked(false),
 #if __cplusplus < 201103L
@@ -13,7 +13,7 @@ m_mut(new std::mutex())
   // We cannot use nullptr ..
   if (pthread_mutex_init(&m_mut, NULL) == -1)
     {
-      throw std::exception(); // TODO: Change
+      throw ThreadError("Cannot create mutex"); // TODO: adjust message?
     }
 #endif
 }
