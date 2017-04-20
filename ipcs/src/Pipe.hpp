@@ -18,11 +18,12 @@ private:
   static constexpr size_t buffSize = 4096;
   enum
   {
-    SOCK_HOST = 0,
-    SOCK_CLIENT,
-    NB_SOCKS
+    PIPE_HOST = 0,
+    PIPE_CLIENT,
+    NB_PIPES
   };
-  int m_socks[NB_SOCKS];
+  int m_pipesIn[NB_PIPES];
+  int m_pipesOut[NB_PIPES];
 };
 
 #endif // !PIPE_HPP_

@@ -52,14 +52,14 @@ void InternetSocket::configureClient()
 {
   close(m_socks[SOCK_HOST]);
   m_socks[SOCK_HOST] = -1;
-  m_readFd = SOCK_CLIENT;
-  m_writeFd = SOCK_CLIENT;
+  m_readFd = m_socks[SOCK_CLIENT];
+  m_writeFd = m_socks[SOCK_CLIENT];
 }
 
 void InternetSocket::configureHost()
 {
   close(m_socks[SOCK_CLIENT]);
   m_socks[SOCK_CLIENT] = -1;
-  m_readFd = SOCK_HOST;
-  m_writeFd = SOCK_HOST;
+  m_readFd = m_socks[SOCK_HOST];
+  m_writeFd = m_socks[SOCK_HOST];
 }

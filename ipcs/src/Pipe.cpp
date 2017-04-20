@@ -6,9 +6,9 @@
 
 constexpr size_t Pipe::buffSize;
 
-Pipe::Pipe() : FileDescriptorCommunicable(), m_socks()
+Pipe::Pipe() : FileDescriptorCommunicable(), m_pipesIn(), m_pipesOut()
 {
-  if (pipe(m_socks) == -1)
+  if (pipe(m_pipesIn) == -1 || pipe(m_pipesOut) == -1)
     {
       throw std::exception(); // TODO
     }
@@ -49,9 +49,10 @@ bool Pipe::read(IMessage &m)
 
 void Pipe::configureClient()
 {
-  close(m_socks[SOCK_HOST]);
-  m_socks[SOCK_HOST] = -1;
-  m_readFd = SOCK_CLIENT;
+  close(m_pipesIn[SOCK_HOST]);
+  m_pipesIn[SOCK_HOST] = -1;
+  m_readFd = m_pipesIn[SOCK_CLIENT];
+
   m_writeFd = SOCK_CLIENT;
 }
 
