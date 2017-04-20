@@ -28,7 +28,7 @@ void Worker::setReg(Information info)
       "[a-zA-Z0-9_.-]+ '@' [a-zA-Z0-9_.-]+", // magic quote ?
       "[0-255].[0-255].[0-255].[0-255]",
   };
-  m_reg = regex::Regex(regInfo[static_cast<int>(info)]);
+  m_reg = regex::Regex(regInfo[info]);
 }
 
 void Worker::loadFile(std::string const &fileName)
@@ -56,7 +56,7 @@ void Worker::uncipher()
     }
   std::cout << "NO MATCH" << std::endl;
   // Bruteforce Xor
-  for (int8_t i = 0; i < std::numeric_limits<int8_t>::max(); i++)
+  for (uint8_t i = 0; i < std::numeric_limits<uint8_t>::max(); i++)
     {
       if (uncipherXor(i))
 	{
@@ -66,7 +66,7 @@ void Worker::uncipher()
     }
 
   // Bruteforce Caesar
-  for (int16_t i = 0; i < std::numeric_limits<int16_t>::max(); i++)
+  for (uint16_t i = 0; i < std::numeric_limits<uint16_t>::max(); i++)
     {
       if (uncipherCaesar(i))
 	{
@@ -78,7 +78,7 @@ void Worker::uncipher()
 
 void Worker::fillResult()
 {
-  int32_t searchPosition = 0;
+  uint32_t searchPosition = 0;
 
   while (m_reg.search(m_uncipherData, searchPosition))
     {
@@ -90,7 +90,7 @@ void Worker::fillResult()
 
 bool Worker::uncipherXor(uint8_t key)
 {
-  for (int32_t i = 0; i < static_cast<int32_t>(m_data.size()); i++)
+  for (uint32_t i = 0; i < m_data.size(); i++)
     m_uncipherData[i] = static_cast<char>(m_data[i] ^ key);
   if (m_reg.search(m_uncipherData))
     return true;
@@ -99,7 +99,7 @@ bool Worker::uncipherXor(uint8_t key)
 
 bool Worker::uncipherCaesar(uint16_t key)
 {
-  for (int32_t i = 0; i < static_cast<int32_t>(m_data.size()); i++)
+  for (uint32_t i = 0; i < m_data.size(); i++)
     {
       if (static_cast<uint16_t>(m_data[i]) >= key)
 	m_uncipherData[i] = static_cast<char>((m_data[i] - key - 'A') % 26);
