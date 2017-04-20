@@ -49,17 +49,22 @@ bool Pipe::read(IMessage &m)
 
 void Pipe::configureClient()
 {
-  close(m_pipesIn[SOCK_HOST]);
-  m_pipesIn[SOCK_HOST] = -1;
-  m_readFd = m_pipesIn[SOCK_CLIENT];
+  close(m_pipesIn[PIPE_WRITE]);
+  m_pipesIn[PIPE_WRITE] = -1;
+  m_readFd = m_pipesIn[PIPE_READ];
 
-  m_writeFd = SOCK_CLIENT;
+  close(m_pipesOut[PIPE_READ]);
+  m_pipesOut[PIPE_READ] = -1;
+  m_writeFd = m_pipesOut[PIPE_WRITE];
 }
 
 void Pipe::configureHost()
 {
-  close(m_socks[SOCK_CLIENT]);
-  m_socks[SOCK_CLIENT] = -1;
-  m_readFd = SOCK_HOST;
-  m_writeFd = SOCK_HOST;
+  close(m_pipesIn[PIPE_READ]);
+  m_pipesIn[PIPE_READ] = -1;
+  m_writeFd = m_pipesIn[PIPE_WRITE];
+
+  close(m_pipesOut[PIPE_WRITE]);
+  m_pipesOut[PIPE_WRITE] = -1;
+  m_readFd = m_pipesOut[PIPE_READ];
 }

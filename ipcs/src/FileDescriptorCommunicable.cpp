@@ -51,3 +51,16 @@ bool FileDescriptorCommunicable::canRead() const
     }
   return (true);
 }
+
+FileDescriptorCommunicable &FileDescriptorCommunicable::
+    operator<<(IMessage const &m)
+{
+  write(m);
+  return (*this);
+}
+
+FileDescriptorCommunicable &FileDescriptorCommunicable::operator>>(IMessage &m)
+{
+  read(m);
+  return (*this);
+}

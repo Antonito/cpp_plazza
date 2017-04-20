@@ -17,6 +17,9 @@ public:
   virtual bool canWrite() const;
   virtual bool canRead() const;
 
+  FileDescriptorCommunicable &operator<<(IMessage const &);
+  FileDescriptorCommunicable &operator>>(IMessage &);
+
 protected:
   int m_readFd;
   int m_writeFd;
