@@ -13,8 +13,6 @@ DIR_LIST=	$(SRC_DIR)
 # Project's files
 
 SRC_FILES=	main.cpp	\
-		Process.cpp	\
-		ProcessList.cpp	\
 		Order.cpp	\
 		Worker.cpp	\
 		Response.cpp

@@ -54,6 +54,7 @@ void UnixSocket::configureClient()
   m_socks[SOCK_HOST] = -1;
   m_readFd = m_socks[SOCK_CLIENT];
   m_writeFd = m_socks[SOCK_CLIENT];
+  toggleTimeout();
 }
 
 void UnixSocket::configureHost()

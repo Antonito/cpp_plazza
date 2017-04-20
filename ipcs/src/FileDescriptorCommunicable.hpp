@@ -17,12 +17,15 @@ public:
   virtual bool canWrite() const;
   virtual bool canRead() const;
 
+  void toggleTimeout();
+
   FileDescriptorCommunicable &operator<<(IMessage const &);
   FileDescriptorCommunicable &operator>>(IMessage &);
 
 protected:
-  int m_readFd;
-  int m_writeFd;
+  int  m_readFd;
+  int  m_writeFd;
+  bool m_timeout;
 };
 
 #endif // !FILE_DESCRIPTOR_COMMUNICABLE
