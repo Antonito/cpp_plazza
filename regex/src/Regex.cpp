@@ -20,16 +20,23 @@ bool Regex::match(std::string const &line) const
     return (std::regex_match(line, m_regex));
 }
 
-bool Regex::search(std::string &input)
+bool Regex::search(std::string const &input)
 {
-    if (regex_search(input, m_match, m_regex))
-        return (false);
-    input = m_match.suffix();
-    return (true);
+    return (regex_search(input, m_match, m_regex));
 }
 
 std::string Regex::replace(std::string const &input, std::string const &replace) const
 {
     return (std::regex_replace(input, m_regex, replace));
+}
+
+std::smatch Regex::getMatch() const
+{
+    return (m_match);
+}
+
+std::regex Regex::getRegex() const
+{
+    return (m_regex);
 }
 }

@@ -16,7 +16,7 @@ public:
   Worker(Worker const &) = delete;
   Worker &operator=(Worker const &) = delete;
 
-  void exec(Order const &);
+  void exec(Order &);
 
 private:
   void setReg(Information);
