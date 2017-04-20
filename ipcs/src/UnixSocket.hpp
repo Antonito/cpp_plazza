@@ -1,13 +1,13 @@
-#ifndef INTERNET_SOCKET_HPP_
-#define INTERNET_SOCKET_HPP_
+#ifndef UNIX_SOCKET_HPP_
+#define UNIX_SOCKET_HPP_
 
 #include "FileDescriptorCommunicable.hpp"
 
-class InternetSocket : public FileDescriptorCommunicable
+class UnixSocket : public FileDescriptorCommunicable
 {
 public:
-  InternetSocket();
-  virtual ~InternetSocket(){};
+  UnixSocket();
+  virtual ~UnixSocket(){};
 
   virtual bool write(IMessage const &);
   virtual bool read(IMessage &);
@@ -25,4 +25,4 @@ private:
   int m_socks[NB_SOCKS];
 };
 
-#endif // !INTERNET_SOCKET_HPP_
+#endif // !UNIX_SOCKET_HPP_
