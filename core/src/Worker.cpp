@@ -11,7 +11,7 @@ Worker::~Worker()
 {
 }
 
-void Worker::exec(Order &order)
+void Worker::exec(Order const &order)
 {
   if (order.size() > 0)
     {
@@ -84,7 +84,8 @@ void Worker::fillResult()
     {
       std::smatch const &match = m_reg.getMatch();
       std::cout << match[0] << std::endl;
-      searchPosition += match.prefix().length() + match[0].length();
+      searchPosition +=
+          static_cast<uint32_t>(match.prefix().length() + match[0].length());
     }
 }
 

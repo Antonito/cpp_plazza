@@ -20,9 +20,10 @@ public:
   Order();
   Order(Order const &other);
   ~Order();
-  
+
   Order &operator=(Order const &other);
   std::string &operator[](size_t n);
+  std::string const &operator[](size_t n) const;
 
   size_t size() const;
   void addFile(std::string const &file);
@@ -37,7 +38,7 @@ public:
 
 private:
   std::vector<std::string> m_files;
-  Information m_info;
+  Information              m_info;
 };
 
-#endif // !ORDER_HPP_ 
+#endif // !ORDER_HPP_
