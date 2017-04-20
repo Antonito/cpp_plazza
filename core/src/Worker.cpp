@@ -24,7 +24,7 @@ void Worker::exec(Order &order)
 void Worker::setReg(Information info)
 {
   static std::vector<std::string> regInfo = {
-      "[a-z]",
+      "([0-9] ?){10}",
       "[a-zA-Z0-9_.-]+ '@' [a-zA-Z0-9_.-]+", // magic quote ?
       "[0-255].[0-255].[0-255].[0-255]",
   };
@@ -78,12 +78,13 @@ void Worker::uncipher()
 
 void Worker::fillResult()
 {
-  std::smatch match;
+  int32_t searchPosition = 0;
 
-  match = m_reg.getMatch();
-  for (int32_t i = 0; i < static_cast<int32_t>(match.size()); i++)
+  while (m_reg.search(m_uncipherData, searchPosition))
     {
-      std::cout << match[i] << std::endl;
+      std::smatch const &match = m_reg.getMatch();
+      std::cout << match[0] << std::endl;
+      searchPosition += match.prefix().length() + match[0].length();
     }
 }
 
