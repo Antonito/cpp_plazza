@@ -9,7 +9,7 @@ public:
   InternetSocket();
   virtual ~InternetSocket(){};
 
-  virtual bool write(IMessage const &);
+  virtual bool write(IMessage const &) const;
   virtual bool read(IMessage &);
   virtual void configureClient();
   virtual void configureHost();

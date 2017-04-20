@@ -8,7 +8,7 @@ class ICommunicable
 public:
   virtual ~ICommunicable(){};
 
-  virtual bool write(IMessage const &) = 0;
+  virtual bool write(IMessage const &) const = 0;
   virtual bool read(IMessage &) = 0;
 
   virtual void configureClient() = 0;

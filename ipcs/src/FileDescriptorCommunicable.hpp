@@ -9,7 +9,7 @@ public:
   FileDescriptorCommunicable();
   virtual ~FileDescriptorCommunicable(){};
 
-  virtual bool write(IMessage const &) = 0;
+  virtual bool write(IMessage const &) const = 0;
   virtual bool read(IMessage &) = 0;
   virtual void configureClient() = 0;
   virtual void configureHost() = 0;

@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include "UnixSocket.hpp"
+#include "Logger.hpp"
 
 constexpr size_t UnixSocket::buffSize;
 
@@ -15,7 +16,7 @@ UnixSocket::UnixSocket() : FileDescriptorCommunicable(), m_socks()
     }
 }
 
-bool UnixSocket::write(IMessage const &m)
+bool UnixSocket::write(IMessage const &m) const
 {
   assert(m_writeFd != -1);
   if (canWrite())
@@ -55,6 +56,7 @@ void UnixSocket::configureClient()
   m_readFd = m_socks[SOCK_CLIENT];
   m_writeFd = m_socks[SOCK_CLIENT];
   toggleTimeout();
+  nope::log::Log(Debug) << "Configured client";
 }
 
 void UnixSocket::configureHost()
@@ -63,4 +65,5 @@ void UnixSocket::configureHost()
   m_socks[SOCK_CLIENT] = -1;
   m_readFd = m_socks[SOCK_HOST];
   m_writeFd = m_socks[SOCK_HOST];
+  nope::log::Log(Debug) << "Configured host";
 }

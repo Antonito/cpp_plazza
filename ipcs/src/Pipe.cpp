@@ -14,7 +14,7 @@ Pipe::Pipe() : FileDescriptorCommunicable(), m_pipesIn(), m_pipesOut()
     }
 }
 
-bool Pipe::write(IMessage const &m)
+bool Pipe::write(IMessage const &m) const
 {
   assert(m_writeFd != -1);
   if (canWrite())

@@ -15,7 +15,7 @@ class Message : public IMessage
                 "Type is not an ISerializable");
 
 public:
-  Message() : m_size(0)
+  Message() : m_size(0), m_data()
   {
   }
 
@@ -104,7 +104,7 @@ public:
   }
 
 private:
-  size_t                    m_size;
+  size_t                     m_size;
   std::unique_ptr<uint8_t[]> m_data;
 };
 

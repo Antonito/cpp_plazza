@@ -11,6 +11,7 @@
 #include "ThreadPool.hpp"
 #include "ICommunicable.hpp"
 #include "Logger.hpp"
+#include "Message.hpp"
 
 // TODO: Chaque process possede un ICommunicable dans lequel on peut faire
 // transiter des IMessages externes.
@@ -141,6 +142,17 @@ public:
     return (getTimeSinceLastAction() > Process<T>::timeout);
   }
 
+  bool isAvailable() const
+  {
+    // TODO: Read subject
+    return (true);
+  }
+
+  ICommunicable const &getCommunication() const
+  {
+    return (m_mes);
+  }
+
 private:
   void updateLastAction()
   {
@@ -149,9 +161,20 @@ private:
 
   void _loop()
   {
-    updateLastAction();
     while (m_running)
       {
+	Message<Order> msgOrder;
+	Order          order;
+	bool           newData = false;
+
+	nope::log::Log(Debug) << "Process " << m_pid << " waiting for order";
+	updateLastAction();
+	newData = m_mes.read(msgOrder);
+	if (newData)
+	  {
+	    nope::log::Log(Debug) << "Process " << m_pid << " got new order";
+	    msgOrder >> order;
+	  }
 	if (hasTimedOut())
 	  {
 	    nope::log::Log(Debug) << "Process " << m_pid << " timed out.";

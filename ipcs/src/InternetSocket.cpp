@@ -15,7 +15,7 @@ InternetSocket::InternetSocket() : FileDescriptorCommunicable(), m_socks()
     }
 }
 
-bool InternetSocket::write(IMessage const &m)
+bool InternetSocket::write(IMessage const &m) const
 {
   assert(m_writeFd != -1);
   if (canWrite())

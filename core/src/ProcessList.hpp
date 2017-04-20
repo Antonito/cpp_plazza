@@ -62,11 +62,43 @@ public:
   // Handle loadbalancing
   void loadbalance(Order &ord)
   {
-    if (getNbProcesses() == 0)
+    bool sent = false;
+
+    while (sent == false)
       {
-	addProcess();
+	if (getNbProcesses() == 0)
+	  {
+	    addProcess();
+	  }
+
+	// Send to process
+	for (typename std::vector<Process<T>>::iterator p = m_proc.begin();
+	     p != m_proc.end();)
+	  {
+	    bool changed = false;
+	    if (p->isAvailable())
+	      {
+		ICommunicable const &com = p->getCommunication();
+		Message<Order>       msg;
+
+		msg << ord;
+		if (com.write(msg) == true)
+		  {
+		    sent = true;
+		    break;
+		  }
+		else
+		  {
+		    changed = true;
+		    p = m_proc.erase(p);
+		  }
+	      }
+	    if (changed == false)
+	      {
+		++p;
+	      }
+	  }
       }
-    // TODO
   }
 
 private:
