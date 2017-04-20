@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include "UnixSocket.hpp"
+#include "CommunicationError.hpp"
 
 constexpr size_t UnixSocket::buffSize;
 
@@ -11,7 +12,7 @@ UnixSocket::UnixSocket() : FileDescriptorCommunicable(), m_socks()
 {
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, m_socks) == -1)
     {
-      throw std::exception(); // TODO
+      throw CommunicationError("Failed create unix socket"); // TODO: more accurate error message?
     }
 }
 

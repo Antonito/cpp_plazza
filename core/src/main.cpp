@@ -42,7 +42,7 @@ int main(int ac, char **av)
 	      while (Order::parse(order, ss))
 		{
 		  // Exec
-		  processes.loadbalance();
+		  processes.loadbalance(order);
 		}
 	      // Show result
 	    }
