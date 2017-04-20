@@ -12,11 +12,7 @@
 #include "ICommunicable.hpp"
 #include "Logger.hpp"
 #include "Message.hpp"
-
-// TODO: Chaque process possede un ICommunicable dans lequel on peut faire
-// transiter des IMessages externes.
-// Les messages recus de la part du fils peuvent etre accessibles via une queue
-// de messages stockee dans le process "pere", qui est le process initial.
+#include "Worker.hpp"
 
 template <typename T>
 class Process
@@ -159,6 +155,13 @@ private:
     m_lastAction = std::chrono::system_clock::now();
   }
 
+  void treatOrder(Order const &order)
+  {
+    Worker work;
+
+    work.exec(order);
+  }
+
   void _loop()
   {
     while (m_running)
@@ -174,6 +177,7 @@ private:
 	  {
 	    nope::log::Log(Debug) << "Process " << m_pid << " got new order";
 	    msgOrder >> order;
+	    m_pool.execute(&Process<T>::treatOrder, this, order);
 	  }
 	if (hasTimedOut())
 	  {
