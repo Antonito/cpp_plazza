@@ -25,7 +25,7 @@ bool FileDescriptorCommunicable::canWrite() const
 	{
 	  t = &tm;
 	}
-      rc = select(m_writeFd + 1, nullptr, &fds, nullptr, &tm);
+      rc = select(m_writeFd + 1, nullptr, &fds, nullptr, t);
     }
   while (rc == -1 && errno == EINTR);
   if (rc <= 0)

@@ -28,7 +28,7 @@ public:
 
   explicit Process(size_t nbThread)
       : m_pid(0), m_ppid(0), m_pool(), m_running(false), m_nbThread(nbThread),
-        m_lastAction(std::chrono::system_clock::now())
+        m_lastAction(std::chrono::system_clock::now()), m_mes()
   {
   }
 
@@ -38,9 +38,11 @@ public:
   Process &operator=(Process const &) = delete;
 
   Process(Process &&other)
-      : m_pid(other.m_pid), m_ppid(other.m_ppid), m_running(other.m_running),
-        m_nbThread(other.m_nbThread), m_lastAction(other.m_lastAction)
+      : m_pid(other.m_pid), m_ppid(other.m_ppid), m_pool(),
+        m_running(other.m_running), m_nbThread(other.m_nbThread),
+        m_lastAction(other.m_lastAction), m_mes(other.m_mes)
   {
+    m_pool = std::move(other.m_pool);
   }
 
   Process &operator=(Process &&other)
@@ -53,6 +55,7 @@ public:
 	m_running = other.m_running;
 	m_nbThread = other.m_nbThread;
 	m_lastAction = other.m_lastAction;
+	m_mes = other.m_mes;
       }
     return (*this);
   }
