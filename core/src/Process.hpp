@@ -83,9 +83,9 @@ public:
 	      {
 		_loop();
 	      }
-	    catch (...)
+	    catch (std::exception const &e)
 	      {
-		std::cerr << "An error occured." << std::endl;
+		std::cerr << e.what() << std::endl;
 	      }
 
 	    // Prevents memory leaks
