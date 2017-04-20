@@ -1,5 +1,5 @@
-#include <exception> // TODO: rm
 #include "Condvar.hpp"
+#include "ThreadError.hpp"
 
 Condvar::Condvar() : m_cond(), m_mut()
 {
@@ -7,7 +7,7 @@ Condvar::Condvar() : m_cond(), m_mut()
   // Cannot use nullptr ...
   if (pthread_cond_init(&m_cond, NULL) == -1)
     {
-      throw std::exception(); // TODO
+      throw ThreadError("Cannot create condvar"); // TODO: adjust message
     }
 #endif
 }

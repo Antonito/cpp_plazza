@@ -12,16 +12,14 @@ DIR_LIST=	$(SRC_DIR)
 
 # Project's files
 
-SRC_FILES=	Condvar.cpp			\
-		Mutex.cpp			\
-		Semaphore.cpp			\
-		Thread.cpp			\
-		ThreadPool.cpp
+SRC_FILES=	AException.cpp		\
+		CommunicationError.cpp	\
+		ThreadError.cpp		\
+		SerializerError.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
-INC_DIR=	$(DIR_LIST)			\
-		$(ROOT_DIR)/exceptions/src/
+INC_DIR=	$(DIR_LIST)
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

@@ -1,5 +1,5 @@
-#include <exception> // TODO: rm
 #include "Semaphore.hpp"
+#include "ThreadError.hpp"
 
 Semaphore::Semaphore(uint32_t val)
     : m_count(val)
@@ -11,7 +11,7 @@ Semaphore::Semaphore(uint32_t val)
 #if __cplusplus < 201103L
   if (sem_init(&m_sem, 0, val) == -1)
     {
-      throw std::exception(); // TODO
+      throw ThreadError("Cannot create semaphore"); // TODO: adjust message?
     }
 #endif
 }

@@ -3,6 +3,6 @@ NAME=			$(ROOT_DIR)/build/libplazza_multithread.a
 
 LOCAL_COMP_FLAGS=	-fPIC
 
-LOCAL_LINK_FLAGS=
+LOCAL_LINK_FLAGS=	-lplazza_exceptions
 
 LOCAL_DEBUG_FLAGS=

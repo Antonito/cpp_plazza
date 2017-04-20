@@ -23,7 +23,8 @@ INC_DIR=	$(DIR_LIST)			\
 		$(ROOT_DIR)/logger/src/		\
 		$(ROOT_DIR)/regex/src/		\
 		$(ROOT_DIR)/multithread/src/	\
-		$(ROOT_DIR)/ipcs/src/
+		$(ROOT_DIR)/ipcs/src/		\
+		$(ROOT_DIR)/exceptions/src/
 
 # Rules
 include $(MK_COMMON_DIR)rules.mk

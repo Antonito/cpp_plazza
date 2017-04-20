@@ -2,6 +2,7 @@
 #include <cstring>
 #include <arpa/inet.h>
 #include "Order.hpp"
+#include "SerializerError.hpp"
 
 Order::Order() : m_files(), m_info(Information::PHONE_NUMBER)
 {
@@ -107,7 +108,7 @@ void Order::deserialize(size_t size, uint8_t *data)
   // Check if data is big enough
   if (size < sizeof(uint32_t))
     {
-      throw std::exception();
+      throw SerializerError("Not enough data to deserialize");
     }
 
   // Get the file count
@@ -123,7 +124,7 @@ void Order::deserialize(size_t size, uint8_t *data)
       // Check if data is big enough
       if (size - cursor < sizeof(uint32_t))
 	{
-	  throw std::exception();
+	  throw SerializerError("Not enough data to deserialize");
 	}
 
       // Get the string length
@@ -134,7 +135,7 @@ void Order::deserialize(size_t size, uint8_t *data)
       // Check if data is big enough
       if (size - cursor < len)
 	{
-	  throw std::exception();
+	  throw SerializerError("Not enough data to deserialize");
 	}
 
       // Add the string
@@ -145,7 +146,7 @@ void Order::deserialize(size_t size, uint8_t *data)
   // Check if data is big enough
   if (size - cursor < sizeof(uint32_t))
     {
-      throw std::exception();
+      throw SerializerError("Not enough data to deserialize");
     }
 
   // Get the information
@@ -197,7 +198,8 @@ bool Order::parse(Order &order, std::stringstream &input)
 
   if (i == sizeof(info) / sizeof(info[0]))
     {
-      throw std::exception(); // Invalid information type
+      throw std::invalid_argument("'" + curWord +
+                                  "' is not a valid information type");
     }
   return (true);
 }

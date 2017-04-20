@@ -20,8 +20,11 @@ public:
 #endif
 
   bool match(std::string const &) const;
-  bool search(std::string &);
+  bool search(std::string const &, uint32_t pos = 0);
   std::string replace(std::string const &, std::string const &) const;
+
+  std::smatch const &getMatch() const;
+  std::regex const &getRegex() const;
 
 private:
   std::smatch m_match;
