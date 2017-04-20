@@ -4,6 +4,7 @@
 #include "ProcessList.hpp"
 #include "Logger.hpp"
 #include "Order.hpp"
+#include "UnixSocket.hpp"
 
 int main(int ac, char **av)
 {
@@ -13,7 +14,8 @@ int main(int ac, char **av)
 
       if (thread_nb > 0)
 	{
-	  ProcessList processes(static_cast<size_t>(thread_nb));
+	  // You can change communication type here
+	  ProcessList<UnixSocket> processes(static_cast<size_t>(thread_nb));
 
 	  // Starts logger
 	  nope::log::Logger::start();
