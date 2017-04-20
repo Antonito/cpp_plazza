@@ -2,7 +2,12 @@
 #include <exception> // TODO: rm
 #include "Mutex.hpp"
 
-Mutex::Mutex() : m_locked(false), m_mut()
+Mutex::Mutex() : m_locked(false),
+#if __cplusplus < 201103L
+m_mut()
+#else
+m_mut(new std::mutex())
+#endif
 {
 #if __cplusplus < 201103L
   // We cannot use nullptr ..
@@ -29,7 +34,7 @@ bool Mutex::lock()
       return (false);
     }
 #else
-  m_mut.lock();
+  m_mut->lock();
 #endif
   m_locked = true;
   return (true);
@@ -44,7 +49,7 @@ bool Mutex::unlock()
       return (false);
     }
 #else
-  m_mut.unlock();
+  m_mut->unlock();
 #endif
   m_locked = false;
   return (true);
@@ -59,7 +64,7 @@ bool Mutex::trylock()
       return (false);
     }
 #else
-  if (!m_mut.try_lock())
+  if (!m_mut->try_lock())
     {
       return (false);
     }
@@ -81,6 +86,6 @@ pthread_mutex_t &Mutex::getMut()
 #else
 std::mutex &Mutex::getMut()
 {
-  return (m_mut);
+  return (*m_mut);
 }
 #endif

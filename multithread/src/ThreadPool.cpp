@@ -15,6 +15,18 @@ ThreadPool::~ThreadPool()
   stopAll();
 }
 
+ThreadPool &ThreadPool::operator=(ThreadPool &&other)
+{
+  if (this == &other)
+    return (*this);
+  m_pool = std::move(other.m_pool);
+  m_orders = std::move(other.m_orders);
+  m_mut = std::move(other.m_mut);
+  m_sem = std::move(other.m_sem);
+  m_running = other.m_running.load();
+  return (*this);
+}
+
 void ThreadPool::addThread()
 {
   m_pool.push_back(Thread(std::bind(&ThreadPool::entrypoint, this)));

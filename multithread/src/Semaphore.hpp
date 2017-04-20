@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <mutex>
 #include <condition_variable>
+#include <memory>
 #endif
 
 class Semaphore
@@ -18,6 +19,8 @@ public:
 #if __cplusplus >= 201103L
   Semaphore(Semaphore const &) = delete;
   Semaphore &operator=(Semaphore const &) = delete;
+  Semaphore(Semaphore &&) = default;
+  Semaphore &operator=(Semaphore &&) = default;
 #endif
 
   bool wait();
@@ -31,8 +34,8 @@ private:
 #if __cplusplus < 201103L
   sem_t m_sem;
 #else
-  std::mutex              m_mut;
-  std::condition_variable m_cond;
+  std::unique_ptr<std::mutex>              m_mut;
+  std::unique_ptr<std::condition_variable> m_cond;
 #endif
 };
 

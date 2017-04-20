@@ -19,6 +19,8 @@ public:
   ~ThreadPool();
   ThreadPool(ThreadPool const &) = delete;
   ThreadPool &operator=(ThreadPool const &) = delete;
+  ThreadPool(ThreadPool &&) = default;
+  ThreadPool &operator=(ThreadPool &&);
 
   // Thread controls
   void addThread();
