@@ -56,9 +56,7 @@ namespace nope
       LogSink file = LogSink::makeFile("log/plazza.log");
 
       Trace.addSink(file);
-#ifdef DEBUG
       Debug.addSink(file);
-#endif
       Info.addSink(file);
       Warning.addSink(file);
       Error.addSink(file);
