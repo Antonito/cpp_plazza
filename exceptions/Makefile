@@ -14,7 +14,8 @@ DIR_LIST=	$(SRC_DIR)
 
 SRC_FILES=	AException.cpp		\
 		CommunicationError.cpp	\
-		ThreadError.cpp
+		ThreadError.cpp		\
+		SerializerError.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 

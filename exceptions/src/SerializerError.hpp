@@ -3,7 +3,7 @@
 
 #include "AException.hpp"
 
-class SerializerError
+class SerializerError : public AException
 {
 public:
   SerializerError(std::string const &msg = "") noexcept;

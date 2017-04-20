@@ -2,6 +2,7 @@
 #include <cstring>
 #include <arpa/inet.h>
 #include "Order.hpp"
+#include "SerializerError.hpp"
 
 Order::Order() : m_files(), m_info(Information::PHONE_NUMBER)
 {

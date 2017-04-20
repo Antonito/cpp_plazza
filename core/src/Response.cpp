@@ -1,6 +1,8 @@
 #include <arpa/inet.h>
 #include <cstring>
+#include <exception>
 #include "Response.hpp"
+#include "SerializerError.hpp"
 
 Response::Response() : m_infos()
 {
