@@ -7,7 +7,7 @@ class FileDescriptorCommunicable : public ICommunicable
 {
 public:
   FileDescriptorCommunicable();
-  virtual ~FileDescriptorCommunicable(){};
+  virtual ~FileDescriptorCommunicable();
 
   virtual bool write(IMessage const &) const = 0;
   virtual bool read(IMessage &) = 0;

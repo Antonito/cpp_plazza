@@ -1,12 +1,25 @@
 #include <sys/time.h>
 #include <sys/select.h>
 #include <errno.h>
+#include <unistd.h>
 #include "FileDescriptorCommunicable.hpp"
 #include "Logger.hpp"
 
 FileDescriptorCommunicable::FileDescriptorCommunicable()
     : m_readFd(-1), m_writeFd(-1), m_timeout(false)
 {
+}
+
+FileDescriptorCommunicable::~FileDescriptorCommunicable()
+{
+  if (m_readFd > 0)
+    {
+      close(m_readFd);
+    }
+  if (m_writeFd > 0)
+    {
+      close(m_writeFd);
+    }
 }
 
 bool FileDescriptorCommunicable::canWrite() const
