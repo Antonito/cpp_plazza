@@ -22,8 +22,9 @@ void Worker::setReg(Information info)
 {
   static std::vector<std::string> regInfo = {
       "([0-9] ?){10}",
-      "[a-zA-Z0-9_.-]+ '@' [a-zA-Z0-9_.-]+", // magic quote ?
-      "[0-255].[0-255].[0-255].[0-255]",
+      "[a-zA-Z0-9_\\.-]+@[a-zA-Z0-9_\\/-]+", // magic quote ?
+      "((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}"\
+      "(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])",
   };
   m_reg = regex::Regex(regInfo[info]);
 }
