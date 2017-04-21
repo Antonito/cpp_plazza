@@ -22,8 +22,8 @@ void Worker::setReg(Information info)
 {
   static std::vector<std::string> regInfo = {
       "([0-9] ?){10}",
-      "[a-zA-Z0-9_\\.-]+@[a-zA-Z0-9_\\/-]+", // magic quote ?
-      "((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}"\
+      "[a-zA-Z0-9_\\.-]+@[a-zA-Z0-9_\\/-]+\\.[a-zA-Z]{2,4}", // magic quote ?
+      "((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}"
       "(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])",
   };
   m_reg = regex::Regex(regInfo[info]);
@@ -52,7 +52,6 @@ void Worker::uncipher()
       fillResult();
       return;
     }
-  std::cout << "NO MATCH" << std::endl;
   // Bruteforce Xor
   for (uint8_t i = 0; i < std::numeric_limits<uint8_t>::max(); i++)
     {
