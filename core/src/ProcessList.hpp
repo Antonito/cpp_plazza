@@ -95,6 +95,7 @@ public:
 		msg << ord;
 		if (com.write(msg) == true)
 		  {
+		    nope::log::Log(Debug) << "Sent order";
 		    sent = true;
 		    break;
 		  }
