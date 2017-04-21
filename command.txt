@@ -1,1 +1,0 @@
-text1.txt PHONE_NUMBER; test  demo	plop EMAIL_ADDRESS		; nope  second.test  EMAIL_ADDRESS  ;			;	nope2 IP_ADDRESS
