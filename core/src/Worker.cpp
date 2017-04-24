@@ -52,6 +52,8 @@ void Worker::uncipher()
       fillResult();
       return;
     }
+  return; // TODO: RM
+
   // Bruteforce Xor
   for (uint16_t i = 0; i < std::numeric_limits<uint16_t>::max(); i++)
     {

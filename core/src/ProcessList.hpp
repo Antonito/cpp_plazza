@@ -54,36 +54,22 @@ public:
     nope::log::Log(Debug) << "All processes are finished.";
   }
 
-  // Handle timeout
-  void checkTimeout()
-  {
-    for (Process<T> &t : m_proc)
-      {
-#if 0
-      if (t.getTimeSinceLastAction() >= timeout)
-	{
-	  // TODO: remove process
-	  t.kill();
-	}
-#endif
-      }
-  }
-
   // Handle loadbalancing
   void loadbalance(Order const &ord)
   {
-    // TODO: Loadbalance
-    bool sent = false;
+    static std::uint32_t i = 0;
+    bool                 sent = false;
 
     while (sent == false)
       {
-	if (getNbProcesses() == 0)
+	// Reinitialize index
+	if (i >= m_proc.size())
 	  {
-	    addProcess();
+	    i = 0;
 	  }
 
 	// Send to process
-	for (typename std::vector<Process<T>>::iterator p = m_proc.begin();
+	for (typename std::vector<Process<T>>::iterator p = m_proc.begin() + i;
 	     p != m_proc.end();)
 	  {
 	    bool changed = false;
@@ -110,7 +96,16 @@ public:
 		++p;
 	      }
 	  }
+	// There was no process available, so add one
+	if (sent == false)
+	  {
+	    nope::log::Log(Debug)
+	        << "Couldn't send order, creating a new process";
+	    addProcess();
+	    i = m_proc.size() - 1;
+	  }
       }
+    ++i;
   }
 
 private:

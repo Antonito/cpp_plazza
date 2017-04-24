@@ -24,7 +24,7 @@ bool UnixSocket::write(IMessage const &m) const
   assert(m_writeFd != -1);
   if (canWrite())
     {
-      uint32_t size = htonl(m.getSize());
+      uint32_t size = htonl(static_cast<std::uint32_t>(m.getSize()));
 
       if (::write(m_writeFd, &size, sizeof(uint32_t)) != -1)
 	{

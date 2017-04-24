@@ -147,8 +147,11 @@ public:
 
   bool isAvailable() const
   {
-    // TODO: Read subject
-    return (true);
+    if (m_sem.getValue() < 2 * m_nbThread)
+      {
+	return (true);
+      }
+    return (false);
   }
 
   ICommunicable const &getCommunication() const
@@ -181,7 +184,8 @@ private:
 	Order          order;
 	bool           newData = false;
 
-	nope::log::Log(Debug) << "Process " << m_pid << " waiting for order";
+	nope::log::Log(Debug) << "Process " << m_pid << " waiting for order ["
+	                      << m_sem.getValue() << " taks]";
 	updateLastAction();
 	newData = m_mes.read(msgOrder);
 	if (newData)

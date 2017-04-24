@@ -10,11 +10,14 @@
 #include "CommunicationError.hpp"
 
 constexpr size_t InternetSocket::buffSize;
+std::uint16_t    InternetSocket::portOff = 0;
 
 InternetSocket::InternetSocket()
-    : FileDescriptorCommunicable(), m_sock(-1), m_cliSock(-1), m_port(12345),
+    : FileDescriptorCommunicable(), m_sock(-1), m_cliSock(-1),
+      m_port(static_cast<std::uint16_t>(12345 + InternetSocket::portOff)),
       m_isHost(false)
 {
+  ++InternetSocket::portOff;
 }
 
 InternetSocket::~InternetSocket()
@@ -31,7 +34,7 @@ bool InternetSocket::write(IMessage const &m) const
   assert(m_writeFd != -1);
   if (canWrite())
     {
-      uint32_t size = htonl(m.getSize());
+      uint32_t size = htonl(static_cast<std::uint32_t>(m.getSize()));
 
       if (::write(m_writeFd, &size, sizeof(uint32_t)) != -1)
 	{
@@ -107,6 +110,8 @@ void InternetSocket::configureHost()
     {
       throw CommunicationError("Failed to create socket");
     }
+  int yes = 1;
+  ::setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
   sin.sin_addr.s_addr = htonl(INADDR_ANY);
   sin.sin_family = AF_INET;
   sin.sin_port = htons(m_port);

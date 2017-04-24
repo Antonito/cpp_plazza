@@ -21,6 +21,7 @@ private:
   int                     m_cliSock;
   std::uint16_t           m_port;
   bool                    m_isHost;
+  static std::uint16_t    portOff;
 };
 
 #endif // !INTERNET_SOCKET_HPP_
