@@ -2,19 +2,27 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <netdb.h> // TODO: RM
 #include <errno.h>
 #include <unistd.h>
 #include "InternetSocket.hpp"
+#include "Logger.hpp"
 #include "CommunicationError.hpp"
 
 constexpr size_t InternetSocket::buffSize;
 
-InternetSocket::InternetSocket() : FileDescriptorCommunicable(), m_socks()
+InternetSocket::InternetSocket()
+    : FileDescriptorCommunicable(), m_sock(-1), m_cliSock(-1), m_port(12345),
+      m_isHost(false)
 {
-  if (socketpair(AF_INET, SOCK_STREAM, 0, m_socks) == -1)
+}
+
+InternetSocket::~InternetSocket()
+{
+  if (m_isHost)
     {
-      throw CommunicationError(
-          "Failed to open socket"); // TODO: adjust error message
+      close(m_sock);
+      m_sock = -1;
     }
 }
 
@@ -66,17 +74,77 @@ bool InternetSocket::read(IMessage &m)
 
 void InternetSocket::configureClient()
 {
-  close(m_socks[SOCK_HOST]);
-  m_socks[SOCK_HOST] = -1;
-  m_readFd = m_socks[SOCK_CLIENT];
-  m_writeFd = m_socks[SOCK_CLIENT];
+  struct sockaddr_in    sin;
+  struct hostent const *hinfo =
+      gethostbyname("localhost"); // TODO: Remove this usage
+
+  m_sock = ::socket(AF_INET, SOCK_STREAM, 0);
+  if (m_sock == -1)
+    {
+      throw CommunicationError("Failed to create socket");
+    }
+  sin.sin_addr = *reinterpret_cast<struct in_addr *>(hinfo->h_addr);
+  sin.sin_port = htons(m_port);
+  sin.sin_family = AF_INET;
+  if (::connect(m_sock, reinterpret_cast<struct sockaddr *>(&sin),
+                sizeof(struct sockaddr)) == -1)
+    {
+      throw CommunicationError("Failed to connect to server");
+    }
   toggleTimeout();
+  m_readFd = m_sock;
+  m_writeFd = m_sock;
+  nope::log::Log(Debug) << "Configured client";
 }
 
 void InternetSocket::configureHost()
 {
-  close(m_socks[SOCK_CLIENT]);
-  m_socks[SOCK_CLIENT] = -1;
-  m_readFd = m_socks[SOCK_HOST];
-  m_writeFd = m_socks[SOCK_HOST];
+  struct sockaddr_in sin;
+
+  m_isHost = true;
+  m_sock = ::socket(AF_INET, SOCK_STREAM, 0);
+  if (m_sock == -1)
+    {
+      throw CommunicationError("Failed to create socket");
+    }
+  sin.sin_addr.s_addr = htonl(INADDR_ANY);
+  sin.sin_family = AF_INET;
+  sin.sin_port = htons(m_port);
+  if (::bind(m_sock, reinterpret_cast<struct sockaddr *>(&sin),
+             sizeof(struct sockaddr_in)) == -1)
+    {
+      throw CommunicationError("Failed to bind socket");
+    }
+  if (::listen(m_sock, 1) == -1)
+    {
+      throw CommunicationError("Failed to listen on socket");
+    }
+
+  // Wait for connection
+  nope::log::Log(Debug) << "Host waiting for client";
+  do
+    {
+      int rc;
+      do
+	{
+	  fd_set readfds;
+	  FD_ZERO(&readfds);
+	  FD_SET(m_sock, &readfds);
+	  rc = ::select(m_sock + 1, &readfds, nullptr, nullptr, nullptr);
+	}
+      while (rc == -1 && errno == EINTR);
+      if (rc == -1)
+	{
+	  throw CommunicationError("Cannot wait for client");
+	}
+      struct sockaddr_in clisin;
+      socklen_t          sinsize = sizeof(struct sockaddr_in);
+      m_cliSock = ::accept(
+          m_sock, reinterpret_cast<struct sockaddr *>(&clisin), &sinsize);
+    }
+  while (m_cliSock == -1);
+  m_readFd = m_cliSock;
+  m_writeFd = m_cliSock;
+  nope::log::Log(Debug) << "Client connected to host !";
+  nope::log::Log(Debug) << "Configured host";
 }

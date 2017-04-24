@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include "Pipe.hpp"
+#include "Logger.hpp"
 #include "CommunicationError.hpp"
 
 constexpr size_t Pipe::buffSize;
@@ -72,6 +73,8 @@ void Pipe::configureClient()
   close(m_pipesOut[PIPE_READ]);
   m_pipesOut[PIPE_READ] = -1;
   m_writeFd = m_pipesOut[PIPE_WRITE];
+  toggleTimeout();
+  nope::log::Log(Debug) << "Configured client";
 }
 
 void Pipe::configureHost()
@@ -83,4 +86,5 @@ void Pipe::configureHost()
   close(m_pipesOut[PIPE_WRITE]);
   m_pipesOut[PIPE_WRITE] = -1;
   m_readFd = m_pipesOut[PIPE_READ];
+  nope::log::Log(Debug) << "Configured host";
 }

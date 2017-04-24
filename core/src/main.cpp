@@ -5,7 +5,7 @@
 #include "Logger.hpp"
 #include "Order.hpp"
 #include "OrderList.hpp"
-#include "UnixSocket.hpp"
+#include "InternetSocket.hpp"
 
 int main(int ac, char **av)
 {
@@ -16,7 +16,8 @@ int main(int ac, char **av)
       if (thread_nb > 0)
 	{
 	  // You can change communication type here
-	  ProcessList<UnixSocket> processes(static_cast<size_t>(thread_nb));
+	  ProcessList<InternetSocket> processes(
+	      static_cast<size_t>(thread_nb));
 
 	  // Starts logger
 	  nope::log::Logger::start();

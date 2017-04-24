@@ -12,11 +12,13 @@ FileDescriptorCommunicable::FileDescriptorCommunicable()
 
 FileDescriptorCommunicable::~FileDescriptorCommunicable()
 {
+  bool const isSame = (m_readFd == m_writeFd);
+
   if (m_readFd > 0)
     {
       close(m_readFd);
     }
-  if (m_writeFd > 0)
+  if (!isSame && m_writeFd > 0)
     {
       close(m_writeFd);
     }
