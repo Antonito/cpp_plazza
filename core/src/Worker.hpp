@@ -23,8 +23,8 @@ private:
   void loadFile(std::string const &);
   void fillResult();
   void uncipher();
-  bool uncipherXor(uint8_t key);
-  bool uncipherCaesar(uint16_t key);
+  bool uncipherXor(uint16_t key);
+  bool uncipherCaesar(uint8_t key);
 
   regex::Regex             m_reg;
   std::string              m_data;
