@@ -50,10 +50,10 @@ std::unique_ptr<uint8_t[]> Order::serialize(size_t &sizeToFill) const
   return (serial);
 }
 
-void Order::deserialize(size_t size, uint8_t *data)
+void Order::deserialize(size_t, uint8_t *data)
 {
   uint32_t tmp;
-  uint32_t cursor = 0;
+  size_t cursor = 0;
   uint32_t length;
 
   std::memcpy(&tmp, &data[cursor], sizeof(uint32_t));

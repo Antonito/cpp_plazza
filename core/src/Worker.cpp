@@ -53,9 +53,15 @@ void Worker::uncipher()
       return;
     }
   // Bruteforce Xor
+  uint8_t buf[2];
+
   for (uint16_t i = 0; i < std::numeric_limits<uint16_t>::max(); i++)
     {
-      if (uncipherXor(i))
+      constexpr uint8_t max = std::numeric_limits<uint8_t>::max();
+
+      buf[0] = static_cast<uint8_t>(i % max);
+      buf[1] = static_cast<uint8_t>(i / max);
+      if (uncipherXor(buf, (i < max) ? 1 : 2))
 	{
 	  fillResult();
 	  return;
@@ -86,10 +92,10 @@ void Worker::fillResult()
     }
 }
 
-bool Worker::uncipherXor(uint16_t key)
+bool Worker::uncipherXor(uint8_t *key, size_t len)
 {
   for (uint32_t i = 0; i < m_data.size(); i++)
-    m_uncipherData[i] = static_cast<char>(m_data[i] ^ key);
+    m_uncipherData[i] = static_cast<char>(m_data[i] ^ key[i % len]);
   if (m_reg.search(m_uncipherData))
     return true;
   return false;
@@ -97,12 +103,16 @@ bool Worker::uncipherXor(uint16_t key)
 
 bool Worker::uncipherCaesar(uint8_t key)
 {
+  int tmp;
+
   for (uint32_t i = 0; i < m_data.size(); i++)
     {
-      if (static_cast<uint8_t>(m_data[i]) >= key)
-	m_uncipherData[i] = static_cast<char>((m_data[i] - key) % 127);
-      else
-	m_uncipherData[i] = static_cast<char>((m_data[i] + 127 - key) % 127);
+      tmp = m_data[i] - key;
+      if (tmp < 0)
+	{
+	  tmp += 256;
+	}
+      m_uncipherData[i] = static_cast<char>(tmp);
     }
   if (m_reg.search(m_uncipherData))
     return true;
