@@ -21,7 +21,7 @@ void Worker::exec(Order const &order)
 void Worker::setReg(Information info)
 {
   static std::vector<std::string> regInfo = {
-      "([0-9] ?){10}",
+      "0[0-9]([ ]?[0-9]{2}){4}",
       "[a-zA-Z0-9_\\.-]+@[a-zA-Z0-9_\\/-]+\\.[a-zA-Z]{2,4}", // magic quote ?
       "((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|[01]"
       "?[0-9]?[0-9])",
@@ -41,7 +41,6 @@ void Worker::loadFile(std::string const &fileName)
       m_data = tmp.str();
       m_uncipherData = tmp.str();
     }
-  // std::cout << m_uncipherData << std::endl;
 }
 
 void Worker::uncipher()
@@ -52,7 +51,6 @@ void Worker::uncipher()
       fillResult();
       return;
     }
-  return; // TODO: RM
 
   // Bruteforce Xor
   uint8_t buf[2];
@@ -61,8 +59,8 @@ void Worker::uncipher()
     {
       constexpr uint8_t max = std::numeric_limits<uint8_t>::max();
 
-      buf[0] = static_cast<uint8_t>(i % max);
-      buf[1] = static_cast<uint8_t>(i / max);
+      buf[1] = static_cast<uint8_t>(i % max);
+      buf[0] = static_cast<uint8_t>(i / max);
       if (uncipherXor(buf, (i < max) ? 1 : 2))
 	{
 	  fillResult();
@@ -112,7 +110,7 @@ bool Worker::uncipherCaesar(uint8_t key)
       tmp = m_data[i] - key;
       if (tmp < 0)
 	{
-	  tmp += 256;
+	  tmp += 127;
 	}
       m_uncipherData[i] = static_cast<char>(tmp);
     }
