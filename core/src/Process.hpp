@@ -25,7 +25,7 @@ public:
 
   explicit Process(size_t nbThread)
       : m_pid(0), m_ppid(0), m_pool(), m_running(false), m_nbThread(nbThread),
-        m_lastAction(std::chrono::system_clock::now()), m_mes()
+        m_lastAction(std::chrono::system_clock::now()), m_mes(), m_sem(0)
   {
   }
 
@@ -37,7 +37,8 @@ public:
   Process(Process &&other)
       : m_pid(other.m_pid), m_ppid(other.m_ppid), m_pool(),
         m_running(other.m_running), m_nbThread(other.m_nbThread),
-        m_lastAction(other.m_lastAction), m_mes(other.m_mes)
+        m_lastAction(other.m_lastAction), m_mes(other.m_mes),
+        m_sem(std::move(other.m_sem))
   {
     m_pool = std::move(other.m_pool);
   }
@@ -53,6 +54,7 @@ public:
 	m_nbThread = other.m_nbThread;
 	m_lastAction = other.m_lastAction;
 	m_mes = other.m_mes;
+	m_sem = std::move(other.m_sem);
       }
     return (*this);
   }
@@ -135,6 +137,11 @@ public:
 
   bool hasTimedOut() const
   {
+    if (m_sem.getValue() != 0)
+      {
+	// There is a job running
+	return (false);
+      }
     return (getTimeSinceLastAction() > Process<T>::timeout);
   }
 
@@ -157,9 +164,13 @@ private:
 
   void treatOrder(Order const &order)
   {
-    Worker work;
+    m_sem.post(); // Signal the main thread there is a job running
+    {
+      Worker work;
 
-    work.exec(order);
+      work.exec(order);
+    }
+    m_sem.wait(); // Signal the main thread the job is over
   }
 
   void _loop()
@@ -194,6 +205,7 @@ private:
   size_t                                m_nbThread;
   std::chrono::system_clock::time_point m_lastAction;
   T                                     m_mes;
+  Semaphore                             m_sem;
 };
 
 #endif // !PROCESS_HPP_
