@@ -16,6 +16,9 @@ public:
 
   virtual bool canWrite() const = 0;
   virtual bool canRead() const = 0;
+
+  virtual int getWriteHandler() const = 0;
+  virtual int getReadHandler() const = 0;
 };
 
 #endif // !ICOMMUNICABLE_HPP_

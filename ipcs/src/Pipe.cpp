@@ -53,7 +53,7 @@ bool Pipe::read(IMessage &m)
 	  ssize_t ret;
 
 	  ret = ::read(m_readFd, buff.get(), size);
-	  if (ret == -1)
+	  if (ret <= 0)
 	    {
 	      return (false);
 	    }

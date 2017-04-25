@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "Worker.hpp"
+#include "Logger.hpp"
 
 Worker::Worker() : m_reg(), m_data(), m_uncipherData(), m_result()
 {
@@ -54,7 +55,7 @@ void Worker::uncipher()
 
   // Bruteforce Xor
   uint8_t buf[2];
-
+  nope::log::Log(Info) << "Trying to XOR bruteforce";
   for (uint16_t i = 0; i < std::numeric_limits<uint16_t>::max(); i++)
     {
       constexpr uint8_t max = std::numeric_limits<uint8_t>::max();
@@ -69,6 +70,7 @@ void Worker::uncipher()
     }
 
   // Bruteforce Caesar
+  nope::log::Log(Info) << "Trying to Caesar bruteforce";
   for (uint8_t i = 0; i < std::numeric_limits<uint8_t>::max(); i++)
     {
       if (uncipherCaesar(i))
@@ -77,6 +79,7 @@ void Worker::uncipher()
 	  return;
 	}
     }
+  nope::log::Log(Warning) << "Didn't find any result";
 }
 
 void Worker::fillResult()
@@ -87,6 +90,7 @@ void Worker::fillResult()
     {
       std::smatch const &match = m_reg.getMatch();
       std::cout << match[0] << std::endl;
+      nope::log::Log(Info) << "Found : " << match[0];
       searchPosition +=
           static_cast<uint32_t>(match.prefix().length() + match[0].length());
     }

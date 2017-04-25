@@ -5,18 +5,21 @@
 #include "Logger.hpp"
 #include "Order.hpp"
 #include "OrderList.hpp"
-#include "UnixSocket.hpp"
+#include "InternetSocket.hpp"
 
 int main(int ac, char **av)
 {
   if (ac == 2)
     {
+      using ProcessList_t = ProcessList<InternetSocket>;
+      using Process_t = Process<InternetSocket>;
+
       int32_t thread_nb = static_cast<int32_t>(std::strtol(av[1], NULL, 0));
 
       if (thread_nb > 0)
 	{
 	  // You can change communication type here
-	  ProcessList<UnixSocket> processes(static_cast<size_t>(thread_nb));
+	  ProcessList_t processes(static_cast<size_t>(thread_nb));
 
 	  // Starts logger
 	  nope::log::Logger::start();
@@ -29,7 +32,7 @@ int main(int ac, char **av)
 
 	  std::signal(SIGPIPE, SIG_IGN);
 	  nope::log::Log(Debug) << "Ignoring SIGPIPE signals";
-
+	  nope::log::Log(Info) << "Starting processing.";
 	  // Launch plazza here
 	  while (1)
 	    {
@@ -41,48 +44,107 @@ int main(int ac, char **av)
 
 	      do
 		{
+		  int            maxFd;
 		  struct timeval tm;
 
-		  tm.tv_sec = 0;
-		  tm.tv_usec = 5;
+		  maxFd = STDIN_FILENO;
+
+		  // Set timer
+		  tm.tv_sec = 2;
+		  tm.tv_usec = 0;
+
 		  FD_ZERO(&readfds);
-		  FD_SET(0, &readfds);
-		  ret = select(0 + 1, &readfds, nullptr, nullptr, &tm);
+
+		  // Add stdin
+		  FD_SET(STDIN_FILENO, &readfds);
+
+		  // Add process file descriptors
+		  for (Process_t const &p : processes.getProcesses())
+		    {
+		      int readFd = p.getCommunication().getReadHandler();
+
+		      FD_SET(readFd, &readfds);
+		      if (readFd >= maxFd)
+			{
+			  maxFd = readFd;
+			}
+		    }
+
+		  ret = select(maxFd + 1, &readfds, nullptr, nullptr, &tm);
 		}
 	      while (ret == -1 && errno == EINTR);
+
 	      if (ret == -1)
 		{
+		  nope::log::Log(Error) << "select() failed";
 		  break;
+		}
+	      else if (ret == 0)
+		{
+		  // If there are no more processes, exit
+		  nope::log::Log(Debug) << "Main process timed out";
+		  if (processes.getNbProcesses() == 0)
+		    {
+		      nope::log::Log(Debug) << "Not any processes left...";
+		      break;
+		    }
 		}
 	      else if (ret > 0)
 		{
-		  if (FD_ISSET(0, &readfds))
+		  if (FD_ISSET(STDIN_FILENO, &readfds))
 		    {
 		      std::getline(std::cin, input, '\n');
-		      if (!std::cin)
+		      if (std::cin)
 			{
-			  // All data was sent to processes
-			  break;
-			}
-
-		      // Parse input
-		      ss << input;
-		      while (OrderList::parse(orderList, ss))
-			{
-			  // Exec
-			  for (size_t i = 0; i < orderList.size(); ++i)
+			  // Parse input
+			  ss << input;
+			  while (OrderList::parse(orderList, ss))
 			    {
-			      processes.loadbalance(orderList.getOrder(i));
+			      // Exec
+			      for (size_t i = 0; i < orderList.size(); ++i)
+				{
+				  processes.loadbalance(orderList.getOrder(i));
+				}
 			    }
+			}
+		    }
+		  if (processes.getNbProcesses() == 0)
+		    {
+		      nope::log::Log(Debug) << "Not any processes left...";
+		      break;
+		    }
+
+		  // Read data coming from processes
+		  for (std::vector<Process_t>::iterator p =
+		           processes.getProcesses().begin();
+		       p != processes.getProcesses().end();)
+		    {
+		      bool changed = false;
+		      int  readFd = p->getCommunication().getReadHandler();
+
+		      if (FD_ISSET(readFd, &readfds))
+			{
+			  if (p->getCommunication().read(p->getResponse()) ==
+			      false)
+			    {
+			      changed = true;
+			      processes.removeProcess(*p);
+			    }
+			}
+		      if (changed == false)
+			{
+			  ++p;
 			}
 		    }
 		}
 	    }
-	  processes.wait();
 	  nope::log::Log(Debug) << "Leaving log";
+	  processes.wait();
+	  nope::log::Log(Info) << "Processing over.";
 	  return (0);
 	}
     }
+  nope::log::Log(Error) << "Wrong number of arguments.";
   std::cout << *av << " thread_number" << std::endl;
   return (1);
 }

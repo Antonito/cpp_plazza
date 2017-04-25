@@ -13,6 +13,7 @@
 #include "Logger.hpp"
 #include "Message.hpp"
 #include "Worker.hpp"
+#include "Response.hpp"
 
 template <typename T>
 class Process
@@ -25,7 +26,8 @@ public:
 
   explicit Process(size_t nbThread)
       : m_pid(0), m_ppid(0), m_pool(), m_running(false), m_nbThread(nbThread),
-        m_lastAction(std::chrono::system_clock::now()), m_mes(), m_sem(0)
+        m_lastAction(std::chrono::system_clock::now()), m_mes(), m_sem(0),
+        m_resp()
   {
   }
 
@@ -38,7 +40,7 @@ public:
       : m_pid(other.m_pid), m_ppid(other.m_ppid), m_pool(),
         m_running(other.m_running), m_nbThread(other.m_nbThread),
         m_lastAction(other.m_lastAction), m_mes(other.m_mes),
-        m_sem(std::move(other.m_sem))
+        m_sem(std::move(other.m_sem)), m_resp(other.m_resp)
   {
     m_pool = std::move(other.m_pool);
   }
@@ -55,8 +57,14 @@ public:
 	m_lastAction = other.m_lastAction;
 	m_mes = other.m_mes;
 	m_sem = std::move(other.m_sem);
+	m_resp = other.m_resp;
       }
     return (*this);
+  }
+
+  bool operator==(Process const &p2) const
+  {
+    return (m_pid == p2.m_pid && m_lastAction == p2.m_lastAction);
   }
 
   bool run()
@@ -89,6 +97,7 @@ public:
 	      {
 		std::cerr << e.what() << std::endl;
 	      }
+	    nope::log::Log(Info) << "Stopping process " << m_pid;
 
 	    // Prevents memory leaks
 	    m_pool.~ThreadPool();
@@ -159,6 +168,16 @@ public:
     return (m_mes);
   }
 
+  ICommunicable &getCommunication()
+  {
+    return (m_mes);
+  }
+
+  Message<Response> &getResponse()
+  {
+    return (m_resp);
+  }
+
 private:
   void updateLastAction()
   {
@@ -171,6 +190,7 @@ private:
     {
       Worker work;
 
+      nope::log::Log(Info) << "Parsing file " << order.getFile();
       work.exec(order);
     }
     m_sem.wait(); // Signal the main thread the job is over
@@ -185,7 +205,7 @@ private:
 	bool           newData = false;
 
 	nope::log::Log(Debug) << "Process " << m_pid << " waiting for order ["
-	                      << m_sem.getValue() << " taks]";
+	                      << m_sem.getValue() << " tasks]";
 	updateLastAction();
 	newData = m_mes.read(msgOrder);
 	if (newData)
@@ -210,6 +230,7 @@ private:
   std::chrono::system_clock::time_point m_lastAction;
   T                                     m_mes;
   Semaphore                             m_sem;
+  Message<Response>                     m_resp;
 };
 
 #endif // !PROCESS_HPP_

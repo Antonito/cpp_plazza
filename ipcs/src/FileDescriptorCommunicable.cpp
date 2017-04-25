@@ -80,6 +80,16 @@ bool FileDescriptorCommunicable::canRead() const
   return (true);
 }
 
+int FileDescriptorCommunicable::getWriteHandler() const
+{
+  return (m_writeFd);
+}
+
+int FileDescriptorCommunicable::getReadHandler() const
+{
+  return (m_readFd);
+}
+
 void FileDescriptorCommunicable::toggleTimeout()
 {
   m_timeout = !m_timeout;

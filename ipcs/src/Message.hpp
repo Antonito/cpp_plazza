@@ -22,7 +22,7 @@ public:
   Message(Message const &other)
       : m_size(other.m_size), m_data(new uint8_t[m_size])
   {
-    std::memcpy(m_data, other.m_data, m_size);
+    std::memcpy(m_data.get(), other.m_data.get(), m_size);
   }
 
   Message(Message &&other)
@@ -46,7 +46,7 @@ public:
       return (*this);
     m_size = other.m_size;
     m_data = std::make_unique<uint8_t[]>(m_size);
-    std::memcpy(m_data, other.m_data, m_size);
+    std::memcpy(m_data.get(), other.m_data.get(), m_size);
     return (*this);
   }
 

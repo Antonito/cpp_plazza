@@ -13,7 +13,7 @@ public:
 
   Response &operator=(Response const &other);
 
-  virtual std::unique_ptr<uint8_t[]> serialize(size_t &sizeToFill);
+  virtual std::unique_ptr<uint8_t[]> serialize(size_t &sizeToFill) const;
   virtual void deserialize(size_t size, uint8_t *data);
 
 private:

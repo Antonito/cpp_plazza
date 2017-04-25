@@ -1,6 +1,7 @@
 #ifndef PROCESSLIST_HPP_
 #define PROCESSLIST_HPP_
 
+#include <algorithm>
 #include "Order.hpp"
 #include "Process.hpp"
 #include "Logger.hpp"
@@ -37,6 +38,12 @@ public:
     m_proc.back().run();
     nope::log::Log(Debug) << "Added process to process list";
     return (true);
+  }
+
+  void removeProcess(Process<T> const &p)
+  {
+    nope::log::Log(Debug) << "Removing process from process list";
+    m_proc.erase(std::remove(m_proc.begin(), m_proc.end(), p), m_proc.end());
   }
 
   size_t getNbProcesses() const
@@ -106,6 +113,16 @@ public:
 	  }
       }
     ++i;
+  }
+
+  std::vector<Process<T>> const &getProcesses() const
+  {
+    return (m_proc);
+  }
+
+  std::vector<Process<T>> &getProcesses()
+  {
+    return (m_proc);
   }
 
 private:

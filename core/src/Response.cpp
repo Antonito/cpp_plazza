@@ -24,7 +24,7 @@ Response &Response::operator=(Response const &other)
   return (*this);
 }
 
-std::unique_ptr<uint8_t[]> Response::serialize(size_t &sizeToFill)
+std::unique_ptr<uint8_t[]> Response::serialize(size_t &sizeToFill) const
 {
   uint32_t toSend;
 

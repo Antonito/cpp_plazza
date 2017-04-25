@@ -17,6 +17,9 @@ public:
   virtual bool canWrite() const;
   virtual bool canRead() const;
 
+  virtual int getWriteHandler() const;
+  virtual int getReadHandler() const;
+
   void toggleTimeout();
 
   FileDescriptorCommunicable &operator<<(IMessage const &);

@@ -2,7 +2,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <netdb.h> // TODO: RM
 #include <errno.h>
 #include <unistd.h>
 #include "InternetSocket.hpp"
@@ -64,7 +63,7 @@ bool InternetSocket::read(IMessage &m)
 	  ssize_t ret;
 
 	  ret = ::read(m_readFd, buff.get(), size);
-	  if (ret == -1)
+	  if (ret <= 0)
 	    {
 	      return (false);
 	    }
@@ -77,16 +76,14 @@ bool InternetSocket::read(IMessage &m)
 
 void InternetSocket::configureClient()
 {
-  struct sockaddr_in    sin;
-  struct hostent const *hinfo =
-      gethostbyname("localhost"); // TODO: Remove this usage
+  struct sockaddr_in sin;
 
   m_sock = ::socket(AF_INET, SOCK_STREAM, 0);
   if (m_sock == -1)
     {
       throw CommunicationError("Failed to create socket");
     }
-  sin.sin_addr = *reinterpret_cast<struct in_addr *>(hinfo->h_addr);
+  sin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
   sin.sin_port = htons(m_port);
   sin.sin_family = AF_INET;
   if (::connect(m_sock, reinterpret_cast<struct sockaddr *>(&sin),
