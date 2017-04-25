@@ -109,7 +109,9 @@ public:
 	    nope::log::Log(Debug)
 	        << "Couldn't send order, creating a new process";
 	    addProcess();
-	    i = m_proc.size() - 1;
+	    i = static_cast<std::uint32_t>(m_proc.size());
+	    if (i)
+	      --i;
 	  }
       }
     ++i;

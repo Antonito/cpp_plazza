@@ -27,7 +27,7 @@ public:
   explicit Process(size_t nbThread)
       : m_pid(0), m_ppid(0), m_pool(), m_running(false), m_nbThread(nbThread),
         m_lastAction(std::chrono::system_clock::now()), m_mes(), m_sem(0),
-        m_resp()
+        m_resp(), m_isHost()
   {
   }
 
@@ -40,7 +40,8 @@ public:
       : m_pid(other.m_pid), m_ppid(other.m_ppid), m_pool(),
         m_running(other.m_running), m_nbThread(other.m_nbThread),
         m_lastAction(other.m_lastAction), m_mes(other.m_mes),
-        m_sem(std::move(other.m_sem)), m_resp(other.m_resp)
+        m_sem(std::move(other.m_sem)), m_resp(other.m_resp),
+        m_isHost(other.m_isHost)
   {
     m_pool = std::move(other.m_pool);
   }
@@ -58,6 +59,7 @@ public:
 	m_mes = other.m_mes;
 	m_sem = std::move(other.m_sem);
 	m_resp = other.m_resp;
+	m_isHost = other.m_isHost;
       }
     return (*this);
   }
@@ -82,6 +84,7 @@ public:
 	if (m_pid == 0)
 	  {
 	    // Child !
+	    m_isHost = false;
 	    m_mes.configureClient();
 	    m_pid = getpid();
 	    for (size_t i = 0; i < m_nbThread; ++i)
@@ -105,6 +108,7 @@ public:
 	    exit(0);
 	  }
       }
+    m_isHost = true;
     m_mes.configureHost();
     nope::log::Log(Debug) << "Process started.";
     return (true);
@@ -156,8 +160,16 @@ public:
 
   bool isAvailable() const
   {
-    if (m_sem.getValue() < 2 * m_nbThread)
+    if (m_isHost == false)
       {
+	if (m_sem.getValue() < 2 * m_nbThread)
+	  {
+	    return (true);
+	  }
+      }
+    else
+      {
+	// TODO: send message
 	return (true);
       }
     return (false);
@@ -210,10 +222,20 @@ private:
 	newData = m_mes.read(msgOrder);
 	if (newData)
 	  {
-	    nope::log::Log(Debug) << "Process " << m_pid << " got new order";
-	    msgOrder >> order;
-	    m_pool.execute(&Process<T>::treatOrder, this, order);
+	    if (isAvailable())
+	      {
+		// TODO : send positive response
+		nope::log::Log(Debug) << "Process " << m_pid
+		                      << " got new order";
+		msgOrder >> order;
+		m_pool.execute(&Process<T>::treatOrder, this, order);
+	      }
+	    else
+	      {
+		// TODO: Send negative response
+	      }
 	  }
+
 	if (hasTimedOut())
 	  {
 	    nope::log::Log(Debug) << "Process " << m_pid << " timed out.";
@@ -231,6 +253,7 @@ private:
   T                                     m_mes;
   Semaphore                             m_sem;
   Message<Response>                     m_resp;
+  bool                                  m_isHost;
 };
 
 #endif // !PROCESS_HPP_

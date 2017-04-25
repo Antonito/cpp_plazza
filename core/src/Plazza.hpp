@@ -14,8 +14,11 @@ public:
   void loop();
 
 private:
-  std::int32_t                m_nbThreads;
-  ProcessList<InternetSocket> m_processes;
+  // Change communiction type here
+  using Comm_t = InternetSocket;
+
+  std::int32_t        m_nbThreads;
+  ProcessList<Comm_t> m_processes;
 };
 
 #endif // !PLAZZA_HPP_

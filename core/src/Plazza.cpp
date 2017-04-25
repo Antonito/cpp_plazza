@@ -46,7 +46,7 @@ void Plazza::loop()
 	    }
 
 	  // Add process file descriptors
-	  for (Process<InternetSocket> const &p : m_processes.getProcesses())
+	  for (Process<Comm_t> const &p : m_processes.getProcesses())
 	    {
 	      int readFd = p.getCommunication().getReadHandler();
 
@@ -100,7 +100,7 @@ void Plazza::loop()
 	    }
 
 	  // Read data coming from processes
-	  for (std::vector<Process<InternetSocket>>::iterator p =
+	  for (std::vector<Process<Comm_t>>::iterator p =
 	           m_processes.getProcesses().begin();
 	       p != m_processes.getProcesses().end();)
 	    {
