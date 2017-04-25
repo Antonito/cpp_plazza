@@ -16,7 +16,8 @@ SRC_FILES=	main.cpp	\
 		Order.cpp	\
 		OrderList.cpp	\
 		Worker.cpp	\
-		Response.cpp
+		Response.cpp	\
+		Plazza.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 
