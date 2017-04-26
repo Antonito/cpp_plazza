@@ -46,7 +46,7 @@ bool FileDescriptorCommunicable::canWrite(bool const blocking) const
     {
       FD_ZERO(&fds);
       FD_SET(m_writeFd, &fds);
-      tm.tv_sec = (m_timeout) ? 5 : 0;
+      tm.tv_sec = (m_timeout) ? 2 : 0;
       tm.tv_usec = 0;
       rc = select(m_writeFd + 1, nullptr, &fds, nullptr,
                   (blocking) ? nullptr : &tm);
@@ -81,7 +81,7 @@ bool FileDescriptorCommunicable::canRead(bool const blocking) const
     {
       FD_ZERO(&fds);
       FD_SET(m_readFd, &fds);
-      tm.tv_sec = (m_timeout) ? 5 : 0;
+      tm.tv_sec = (m_timeout) ? 2 : 0;
       tm.tv_usec = 0;
       rc = select(m_readFd + 1, &fds, nullptr, nullptr,
                   (blocking) ? nullptr : &tm);

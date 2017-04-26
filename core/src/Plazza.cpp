@@ -35,8 +35,8 @@ void Plazza::loop()
 
 	  maxFd = stdin;
 
-	  // Set 3 seconds timer
-	  tm.tv_sec = 3;
+	  // Set 1 seconds timer
+	  tm.tv_sec = 1;
 	  tm.tv_usec = 0;
 
 	  FD_ZERO(&readfds);
