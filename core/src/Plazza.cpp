@@ -6,7 +6,8 @@
 #include "OrderList.hpp"
 
 Plazza::Plazza(std::int32_t nbThreads)
-    : m_nbThreads(nbThreads), m_processes(static_cast<std::size_t>(nbThreads))
+    : m_nbThreads(nbThreads),
+      m_processes(static_cast<std::size_t>(m_nbThreads))
 {
 }
 

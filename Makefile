@@ -3,8 +3,6 @@ MK_DIR=			./mk/
 include $(MK_DIR)colors.mk $(MK_DIR)defs.mk
 
 ##### General configuration
-COMMON=			common
-
 CORE=			core
 
 MULTITHREAD=		multithread
@@ -18,8 +16,7 @@ LOGGER=			logger
 REGEX=			regex
 
 ###### Add your projects here #####
-PROJECTS=		./$(COMMON)/					\
-			./$(LOGGER)/					\
+PROJECTS=		./$(LOGGER)/					\
 			./$(REGEX)/					\
 			./$(EXCEPTIONS)					\
 			./$(MULTITHREAD)/				\
@@ -41,10 +38,6 @@ all:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path);)
-
-$(COMMON):
-			@$(ECHO) "$(YELLOW)./$(COMMON)/ :$(CLEAR)\n"
-			@$(MAKE) $(ARGS) $(COMMON)
 
 $(LOGGER):
 			@$(ECHO) "$(YELLOW)./$(LOGGER)/ :$(CLEAR)\n"
