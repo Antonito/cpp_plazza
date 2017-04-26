@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cstring>
 #include "Plazza.hpp"
 #include "Logger.hpp"
 #include "Order.hpp"
@@ -31,9 +32,9 @@ void Plazza::loop()
 	  int            maxFd;
 	  struct timeval tm;
 
-	  maxFd = (stdin != -1) ? stdin : 0;
+	  maxFd = stdin;
 
-	  // Set 3secondes timer
+	  // Set 3 seconds timer
 	  tm.tv_sec = 3;
 	  tm.tv_usec = 0;
 
@@ -51,25 +52,28 @@ void Plazza::loop()
 	      int readFd = p.getCommunication().getReadHandler();
 
 	      FD_SET(readFd, &readfds);
+	      nope::log::Log(Debug) << "Adding FD " << readFd;
 	      if (readFd >= maxFd)
 		{
 		  maxFd = readFd;
 		}
 	    }
-
 	  ret = select(maxFd + 1, &readfds, nullptr, nullptr, &tm);
 	}
       while (ret == -1 && errno == EINTR);
 
       if (ret == -1)
 	{
-	  nope::log::Log(Error) << "select() failed";
+	  nope::log::Log(Error) << "select() failed : "
+	                        << std::strerror(errno);
 	  break;
 	}
       else if (ret == 0)
 	{
 	  // If there are no more processes, exit
-	  nope::log::Log(Debug) << "Main process timed out";
+	  nope::log::Log(Debug) << "Main process timed out ["
+	                        << m_processes.getNbProcesses()
+	                        << " proc left]";
 	  if (m_processes.getNbProcesses() == 0)
 	    {
 	      nope::log::Log(Debug) << "Not any processes left...";

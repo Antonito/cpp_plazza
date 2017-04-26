@@ -65,11 +65,17 @@ size_t ThreadPool::getNumberThreads() const
   return (m_pool.size());
 }
 
+size_t ThreadPool::getNumberTasks() const
+{
+  return (m_sem.getValue());
+}
+
 Thread &ThreadPool::operator[](size_t ndx)
 {
   if (ndx > getNumberThreads())
     {
-      throw std::out_of_range("Tried to access inexistant thread"); // TODO: adjust message?
+      throw std::out_of_range(
+          "Tried to access inexistant thread"); // TODO: adjust message?
     }
   return (m_pool[ndx]);
 }

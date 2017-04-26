@@ -66,11 +66,11 @@ bool Pipe::read(IMessage &m)
 
 void Pipe::configureClient()
 {
-  close(m_pipesIn[PIPE_WRITE]);
+  ::close(m_pipesIn[PIPE_WRITE]);
   m_pipesIn[PIPE_WRITE] = -1;
   m_readFd = m_pipesIn[PIPE_READ];
 
-  close(m_pipesOut[PIPE_READ]);
+  ::close(m_pipesOut[PIPE_READ]);
   m_pipesOut[PIPE_READ] = -1;
   m_writeFd = m_pipesOut[PIPE_WRITE];
   toggleTimeout();
@@ -79,11 +79,11 @@ void Pipe::configureClient()
 
 void Pipe::configureHost()
 {
-  close(m_pipesIn[PIPE_READ]);
+  ::close(m_pipesIn[PIPE_READ]);
   m_pipesIn[PIPE_READ] = -1;
   m_writeFd = m_pipesIn[PIPE_WRITE];
 
-  close(m_pipesOut[PIPE_WRITE]);
+  ::close(m_pipesOut[PIPE_WRITE]);
   m_pipesOut[PIPE_WRITE] = -1;
   m_readFd = m_pipesOut[PIPE_READ];
   nope::log::Log(Debug) << "Configured host";

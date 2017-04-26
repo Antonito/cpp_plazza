@@ -38,6 +38,7 @@ public:
   }
 
   size_t getNumberThreads() const;
+  size_t getNumberTasks() const;
   Thread &operator[](size_t ndx);
 
 private:

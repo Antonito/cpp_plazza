@@ -26,8 +26,8 @@ public:
 
   explicit Process(size_t nbThread)
       : m_pid(0), m_ppid(0), m_pool(), m_running(false), m_nbThread(nbThread),
-        m_lastAction(std::chrono::system_clock::now()), m_mes(), m_sem(0),
-        m_resp(), m_isHost()
+        m_lastAction(std::chrono::system_clock::now()), m_mes(), m_resp(),
+        m_isHost()
   {
   }
 
@@ -40,8 +40,7 @@ public:
       : m_pid(other.m_pid), m_ppid(other.m_ppid), m_pool(),
         m_running(other.m_running), m_nbThread(other.m_nbThread),
         m_lastAction(other.m_lastAction), m_mes(other.m_mes),
-        m_sem(std::move(other.m_sem)), m_resp(other.m_resp),
-        m_isHost(other.m_isHost)
+        m_resp(other.m_resp), m_isHost(other.m_isHost)
   {
     m_pool = std::move(other.m_pool);
   }
@@ -57,7 +56,6 @@ public:
 	m_nbThread = other.m_nbThread;
 	m_lastAction = other.m_lastAction;
 	m_mes = other.m_mes;
-	m_sem = std::move(other.m_sem);
 	m_resp = other.m_resp;
 	m_isHost = other.m_isHost;
       }
@@ -84,9 +82,10 @@ public:
 	if (m_pid == 0)
 	  {
 	    // Child !
+	    m_pid = getpid();
+	    nope::log::Log(Info) << "Starting process " << m_pid;
 	    m_isHost = false;
 	    m_mes.configureClient();
-	    m_pid = getpid();
 	    for (size_t i = 0; i < m_nbThread; ++i)
 	      {
 		m_pool.addThread();
@@ -98,13 +97,15 @@ public:
 	      }
 	    catch (std::exception const &e)
 	      {
-		std::cerr << e.what() << std::endl;
+		nope::log::Log(Error) << "{" << m_pid
+		                      << "} Error: " << e.what();
 	      }
 	    nope::log::Log(Info) << "Stopping process " << m_pid;
 
+	    m_mes.close();
 	    // Prevents memory leaks
 	    m_pool.~ThreadPool();
-	    nope::log::Log(Debug) << "Exit child process.";
+	    nope::log::Log(Debug) << "Exit child process " << m_pid;
 	    exit(0);
 	  }
       }
@@ -121,13 +122,13 @@ public:
 
   bool wait()
   {
-    assert(m_running == true);
     nope::log::Log(Debug) << "Waiting for child process.";
     if (::waitpid(m_pid, NULL, 0) == -1)
       {
 	return (false);
       }
     nope::log::Log(Debug) << "Child process terminated.";
+    m_mes.close(); // Close connection
     m_running = false;
     return (true);
   }
@@ -138,7 +139,8 @@ public:
       {
 	nope::log::Log(Debug) << "Killing child process.";
 	::kill(m_pid, SIGTERM);
-	wait();
+	while (!wait())
+	  ;
       }
   }
 
@@ -150,7 +152,7 @@ public:
 
   bool hasTimedOut() const
   {
-    if (m_sem.getValue() != 0)
+    if (m_pool.getNumberTasks() != 0)
       {
 	// There is a job running
 	return (false);
@@ -158,21 +160,57 @@ public:
     return (getTimeSinceLastAction() > Process<T>::timeout);
   }
 
-  bool isAvailable() const
+  bool isAvailable()
   {
+    Message<Response> respPck;
+    bool              ret = false;
+
     if (m_isHost == false)
       {
-	if (m_sem.getValue() < 2 * m_nbThread)
+	if (m_pool.getNumberTasks() < 2 * m_nbThread)
 	  {
-	    return (true);
+	    ret = true;
+	  }
+	if (m_mes.canRead())
+	  {
+	    Response rep;
+
+	    if (m_mes.read(respPck))
+	      {
+		respPck >> rep;
+		if (rep.isAvailable() && m_mes.canWrite(true))
+		  {
+		    Response resp(ret);
+		    respPck << resp;
+		    m_mes << respPck;
+#if defined(DEBUG_VERBOSE)
+		    nope::log::Log(Debug) << "Process " << m_pid
+		                          << " sent response";
+#endif
+		  }
+	      }
 	  }
       }
     else
       {
-	// TODO: send message
-	return (true);
+	Response resp(true);
+
+	nope::log::Log(Debug)
+	    << "Waiting for response from process [Available ?]";
+	if (m_mes.canWrite(true))
+	  {
+	    respPck << resp;
+	    m_mes << respPck;
+	    if (m_mes.canRead(true))
+	      {
+		m_mes >> respPck;
+		respPck >> resp;
+		ret = resp.isAvailable();
+	      }
+	    nope::log::Log(Debug) << "Got response ! Available: " << ret;
+	  }
       }
-    return (false);
+    return (ret);
   }
 
   ICommunicable const &getCommunication() const
@@ -198,14 +236,10 @@ private:
 
   void treatOrder(Order const &order)
   {
-    m_sem.post(); // Signal the main thread there is a job running
-    {
-      Worker work;
+    Worker work;
 
-      nope::log::Log(Info) << "Parsing file " << order.getFile();
-      work.exec(order);
-    }
-    m_sem.wait(); // Signal the main thread the job is over
+    nope::log::Log(Info) << "Parsing file " << order.getFile();
+    work.exec(order);
   }
 
   void _loop()
@@ -217,23 +251,30 @@ private:
 	bool           newData = false;
 
 	nope::log::Log(Debug) << "Process " << m_pid << " waiting for order ["
-	                      << m_sem.getValue() << " tasks]";
+	                      << m_pool.getNumberTasks() << " tasks]";
 	updateLastAction();
-	newData = m_mes.read(msgOrder);
-	if (newData)
+	if (isAvailable())
 	  {
-	    if (isAvailable())
+	    // We're waiting for an order
+	    do
 	      {
-		// TODO : send positive response
-		nope::log::Log(Debug) << "Process " << m_pid
-		                      << " got new order";
-		msgOrder >> order;
-		m_pool.execute(&Process<T>::treatOrder, this, order);
+		if (m_mes.canRead())
+		  {
+		    newData = m_mes.read(msgOrder);
+		    if (newData)
+		      {
+			nope::log::Log(Debug) << "Process " << m_pid
+			                      << " got new order";
+			msgOrder >> order;
+			m_pool.execute(&Process<T>::treatOrder, this, order);
+		      }
+		  }
+		if (hasTimedOut())
+		  {
+		    break;
+		  }
 	      }
-	    else
-	      {
-		// TODO: Send negative response
-	      }
+	    while (!newData);
 	  }
 
 	if (hasTimedOut())
@@ -251,7 +292,6 @@ private:
   size_t                                m_nbThread;
   std::chrono::system_clock::time_point m_lastAction;
   T                                     m_mes;
-  Semaphore                             m_sem;
   Message<Response>                     m_resp;
   bool                                  m_isHost;
 };

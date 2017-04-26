@@ -26,6 +26,8 @@ int main(int ac, char **av)
 
 	  // Runs plazza
 	  plazza.loop();
+	  nope::log::Log(Info)
+	      << "Leaving main process. All children should be killed by now.";
 	  return (0);
 	}
     }

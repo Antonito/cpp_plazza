@@ -14,11 +14,13 @@ public:
   virtual void configureClient() = 0;
   virtual void configureHost() = 0;
 
-  virtual bool canWrite() const = 0;
-  virtual bool canRead() const = 0;
+  virtual bool canWrite(bool const blocking = false) const = 0;
+  virtual bool canRead(bool const blocking = false) const = 0;
 
   virtual int getWriteHandler() const = 0;
   virtual int getReadHandler() const = 0;
+
+  virtual void close() = 0;
 };
 
 #endif // !ICOMMUNICABLE_HPP_

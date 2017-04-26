@@ -34,15 +34,16 @@ public:
   bool addProcess()
   {
     nope::log::Log(Debug) << "Pushing";
-    m_proc.push_back(Process<T>(m_threadPerProcess));
+    m_proc.push_back(std::move(Process<T>(m_threadPerProcess)));
     m_proc.back().run();
     nope::log::Log(Debug) << "Added process to process list";
     return (true);
   }
 
-  void removeProcess(Process<T> const &p)
+  void removeProcess(Process<T> &p)
   {
     nope::log::Log(Debug) << "Removing process from process list";
+    p.kill();
     m_proc.erase(std::remove(m_proc.begin(), m_proc.end(), p), m_proc.end());
   }
 
@@ -67,6 +68,7 @@ public:
     static std::uint32_t i = 0;
     bool                 sent = false;
 
+    nope::log::Log(Debug) << "Load balacing data";
     while (sent == false)
       {
 	// Reinitialize index
@@ -82,6 +84,7 @@ public:
 	    bool changed = false;
 	    if (p->isAvailable())
 	      {
+		nope::log::Log(Debug) << "Found an available process !";
 		ICommunicable const &com = p->getCommunication();
 		Message<Order>       msg;
 
@@ -103,6 +106,7 @@ public:
 		++p;
 	      }
 	  }
+
 	// There was no process available, so add one
 	if (sent == false)
 	  {

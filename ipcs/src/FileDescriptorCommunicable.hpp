@@ -14,13 +14,15 @@ public:
   virtual void configureClient() = 0;
   virtual void configureHost() = 0;
 
-  virtual bool canWrite() const;
-  virtual bool canRead() const;
+  virtual bool canWrite(bool const blocking = false) const;
+  virtual bool canRead(bool const blocking = false) const;
 
   virtual int getWriteHandler() const;
   virtual int getReadHandler() const;
 
   void toggleTimeout();
+
+  virtual void close();
 
   FileDescriptorCommunicable &operator<<(IMessage const &);
   FileDescriptorCommunicable &operator>>(IMessage &);

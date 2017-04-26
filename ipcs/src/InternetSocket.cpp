@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <unistd.h>
+#include <thread>
 #include "InternetSocket.hpp"
 #include "Logger.hpp"
 #include "CommunicationError.hpp"
@@ -23,7 +24,7 @@ InternetSocket::~InternetSocket()
 {
   if (m_isHost)
     {
-      close(m_sock);
+      ::close(m_sock);
       m_sock = -1;
     }
 }

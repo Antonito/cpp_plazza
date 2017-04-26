@@ -8,6 +8,7 @@ class Response : public ISerializable
 {
 public:
   Response();
+  Response(bool availability);
   Response(Response const &other);
   virtual ~Response();
 
@@ -15,6 +16,8 @@ public:
 
   virtual std::unique_ptr<uint8_t[]> serialize(size_t &sizeToFill) const;
   virtual void deserialize(size_t size, uint8_t *data);
+
+  bool isAvailable() const;
 
 private:
   struct Info
@@ -25,6 +28,7 @@ private:
     uint32_t processed;
   };
 
+  uint8_t           m_available;
   std::vector<Info> m_infos;
 };
 

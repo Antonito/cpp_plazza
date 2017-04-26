@@ -67,7 +67,7 @@ bool UnixSocket::read(IMessage &m)
 
 void UnixSocket::configureClient()
 {
-  close(m_socks[SOCK_HOST]);
+  ::close(m_socks[SOCK_HOST]);
   m_socks[SOCK_HOST] = -1;
   m_readFd = m_socks[SOCK_CLIENT];
   m_writeFd = m_socks[SOCK_CLIENT];
@@ -77,7 +77,7 @@ void UnixSocket::configureClient()
 
 void UnixSocket::configureHost()
 {
-  close(m_socks[SOCK_CLIENT]);
+  ::close(m_socks[SOCK_CLIENT]);
   m_socks[SOCK_CLIENT] = -1;
   m_readFd = m_socks[SOCK_HOST];
   m_writeFd = m_socks[SOCK_HOST];

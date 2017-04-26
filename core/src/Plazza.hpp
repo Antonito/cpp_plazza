@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "ProcessList.hpp"
-#include "InternetSocket.hpp"
+#include "Pipe.hpp"
 
 class Plazza
 {
@@ -15,7 +15,7 @@ public:
 
 private:
   // Change communiction type here
-  using Comm_t = InternetSocket;
+  using Comm_t = Pipe;
 
   std::int32_t        m_nbThreads;
   ProcessList<Comm_t> m_processes;
