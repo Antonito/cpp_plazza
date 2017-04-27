@@ -20,7 +20,9 @@ public:
   {
   }
 
-  ~ProcessList(){};
+  ~ProcessList()
+  {
+  }
 
   ProcessList(ProcessList const &) = delete;
   ProcessList &operator=(ProcessList const &) = delete;
@@ -82,6 +84,7 @@ public:
 	     p != m_proc.end();)
 	  {
 	    bool changed = false;
+
 	    if (p->isAvailable())
 	      {
 		nope::log::Log(Debug) << "Found an available process !";

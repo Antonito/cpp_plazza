@@ -167,6 +167,7 @@ public:
 
     if (m_isHost == false)
       {
+	// Client part (process)
 	if (m_pool.getNumberTasks() < 2 * m_nbThread)
 	  {
 	    ret = true;
@@ -181,6 +182,8 @@ public:
 		if (rep.isAvailable() && m_mes.canWrite(true))
 		  {
 		    Response resp(ret);
+
+		    // TODO: Fill threadpool data here
 		    respPck << resp;
 		    m_mes << respPck;
 #if defined(DEBUG_VERBOSE)
@@ -193,6 +196,7 @@ public:
       }
     else
       {
+	// Host part (main process)
 	Response resp(true);
 
 	nope::log::Log(Debug)
@@ -205,6 +209,7 @@ public:
 	      {
 		m_mes >> respPck;
 		respPck >> resp;
+		m_resp = respPck;
 		ret = resp.isAvailable();
 	      }
 	    nope::log::Log(Debug) << "Got response ! Available: " << ret;
