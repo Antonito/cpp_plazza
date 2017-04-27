@@ -13,8 +13,7 @@ Pipe::Pipe() : FileDescriptorCommunicable(), m_pipesIn(), m_pipesOut()
 {
   if (pipe(m_pipesIn) == -1 || pipe(m_pipesOut) == -1)
     {
-      throw CommunicationError(
-          "Cannot open pipe"); // TODO: adjust error message?
+      throw CommunicationError("Cannot open pipe");
     }
 }
 

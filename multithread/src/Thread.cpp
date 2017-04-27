@@ -22,7 +22,7 @@ Thread::Thread(void (*func)(void *), void *data) : m_handle(func), m_arg(data)
 {
   if (pthread_create(&m_thread, NULL, &Thread::__thread_entry, this) == -1)
     {
-      throw ThreadError("Cannot create new thread"); // TODO: adjust message?
+      throw ThreadError("Cannot create new thread");
     }
 }
 #endif

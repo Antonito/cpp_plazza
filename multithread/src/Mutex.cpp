@@ -2,18 +2,19 @@
 #include "Mutex.hpp"
 #include "ThreadError.hpp"
 
-Mutex::Mutex() : m_locked(false),
+Mutex::Mutex()
+    : m_locked(false),
 #if __cplusplus < 201103L
-m_mut()
+      m_mut()
 #else
-m_mut(new std::mutex())
+      m_mut(new std::mutex())
 #endif
 {
 #if __cplusplus < 201103L
   // We cannot use nullptr ..
   if (pthread_mutex_init(&m_mut, NULL) == -1)
     {
-      throw ThreadError("Cannot create mutex"); // TODO: adjust message?
+      throw ThreadError("Cannot create mutex");
     }
 #endif
 }

@@ -15,7 +15,7 @@
 class ThreadPool
 {
 public:
-  ThreadPool(size_t nbThread = 0);
+  ThreadPool(std::size_t nbThread = 0);
   ~ThreadPool();
   ThreadPool(ThreadPool const &) = delete;
   ThreadPool &operator=(ThreadPool const &) = delete;
@@ -24,7 +24,7 @@ public:
 
   // Thread controls
   void addThread();
-  bool removeThread(size_t ndx);
+  bool removeThread(std::size_t ndx);
   void stopAll();
 
   template <typename F, typename... Args>
@@ -37,18 +37,21 @@ public:
     return (true);
   }
 
-  size_t getNumberThreads() const;
-  size_t getNumberTasks() const;
-  Thread &operator[](size_t ndx);
+  std::size_t              getNumberThreads() const;
+  std::size_t              getNumberTasks() const;
+  std::vector<bool> const &getThreadStatus() const;
+  Thread &operator[](std::size_t ndx);
 
 private:
-  void entrypoint();
+  void entrypoint(std::int32_t const);
 
   std::vector<Thread>               m_pool;
   std::queue<std::function<void()>> m_orders;
   Mutex                             m_mut;
   Semaphore                         m_sem;
   std::atomic<bool>                 m_running;
+  std::int32_t                      m_nbThreads;
+  std::vector<bool>                 m_status;
 };
 
 #endif // !THREADPOOL_HPP_

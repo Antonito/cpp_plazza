@@ -7,7 +7,7 @@ Condvar::Condvar() : m_cond(), m_mut()
   // Cannot use nullptr ...
   if (pthread_cond_init(&m_cond, NULL) == -1)
     {
-      throw ThreadError("Cannot create condvar"); // TODO: adjust message
+      throw ThreadError("Cannot create condvar");
     }
 #endif
 }

@@ -11,7 +11,7 @@ Semaphore::Semaphore(uint32_t val)
 #if __cplusplus < 201103L
   if (sem_init(&m_sem, 0, val) == -1)
     {
-      throw ThreadError("Cannot create semaphore"); // TODO: adjust message?
+      throw ThreadError("Cannot create semaphore");
     }
 #endif
 }
