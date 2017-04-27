@@ -25,6 +25,10 @@ CXXFLAGS=	-DNDEBUG -O3
 LDFLAGS=
 endif
 
+ifeq ($(BRUTEFORCE), yes)
+CXXFLAGS+=	-DBRUTEFORCE
+endif
+
 CXXFLAGS+=	$(addprefix -I, $(INC_DIR))	\
 		$(LOCAL_COMP_FLAGS)
 

@@ -26,7 +26,9 @@ PROJECTS=		./$(LOGGER)/					\
 # Some useful variables
 DEBUG=			no
 
-ARGS=			DEBUG=$(DEBUG) -s --warn-undefined-variables -C
+BRUTEFORCE=		no
+
+ARGS=			DEBUG=$(DEBUG) BRUTEFORCE=$(BRUTEFORCE) -s --warn-undefined-variables -C
 
 CURRENT_DIR=		${PWD}
 

@@ -54,6 +54,7 @@ void Worker::uncipher()
     }
 
 #if defined(BRUTEFORCE)
+
   // Bruteforce Xor
   uint8_t buf[2];
   nope::log::Log(Info) << "Trying to XOR bruteforce";
