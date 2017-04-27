@@ -15,7 +15,8 @@ DIR_LIST=	$(SRC_DIR)
 SRC_FILES=	FileDescriptorCommunicable.cpp	\
 		UnixSocket.cpp			\
 		InternetSocket.cpp		\
-		Pipe.cpp
+		Pipe.cpp			\
+		NamedPipe.cpp
 
 SRC=		$(addprefix $(SRC_DIR), $(SRC_FILES))
 

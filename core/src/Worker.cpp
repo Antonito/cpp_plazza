@@ -53,6 +53,7 @@ void Worker::uncipher()
       return;
     }
 
+#if defined(BRUTEFORCE)
   // Bruteforce Xor
   uint8_t buf[2];
   nope::log::Log(Info) << "Trying to XOR bruteforce";
@@ -79,6 +80,7 @@ void Worker::uncipher()
 	  return;
 	}
     }
+#endif
   nope::log::Log(Warning) << "Didn't find any result";
 }
 
