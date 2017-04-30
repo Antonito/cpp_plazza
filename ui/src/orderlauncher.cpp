@@ -78,7 +78,6 @@ void OrderLauncher::launch()
 
     command += mode;
 
-    std::cout << "Launching command: " << command.toStdString() << std::endl;
     this->launchOrder(command);
     m_files.clear();
     m_list->clear();

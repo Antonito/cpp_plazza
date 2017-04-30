@@ -181,25 +181,7 @@ public:
 		respPck >> rep;
 		if (rep.isAvailable() && m_mes.canWrite(true))
 		  {
-		    std::vector<bool> const &status = m_pool.getThreadStatus();
-		    uint32_t busy = 0;
-
-		    for (bool b : status)
-		      {
-			if (b)
-			  {
-			    ++busy;
-			  }
-		      }
-
-		    uint32_t waiting = 0;
-
-		    if (m_pool.getNumberTasks() > m_pool.getNumberThreads())
-		      {
-			waiting = static_cast<uint32_t>(m_pool.getNumberTasks() - m_pool.getNumberThreads());
-		      }
-
-		    Response resp(ret, busy, waiting);
+		    Response resp(ret, 0, 0);
 
 		    // TODO: Fill threadpool data here
 		    respPck << resp;

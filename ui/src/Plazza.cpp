@@ -84,7 +84,7 @@ bool Plazza::loop()
     {
       // If there are no more processes, exit
       nope::log::Log(Debug) << "Main process timed out ["
-                           << m_processes.getNbProcesses() << " proc left]";
+                            << m_processes.getNbProcesses() << " proc left]";
       if (m_processes.getNbProcesses() == 0)
 	{
 	  nope::log::Log(Debug) << "Not any processes left...";
@@ -93,6 +93,40 @@ bool Plazza::loop()
     }
   else
     {
+      //
+      // Getting orders
+      //
+
+      //       if (stdin != -1 && FD_ISSET(stdin, &m_readfds))
+      // 	{
+      // 	  if (!std::getline(std::cin, input, '\n'))
+      // 	    {
+      // 	      stdin = -1;
+      // 	    }
+      // 	  else if (std::cin)
+      // 	    {
+      // 	      // Parse input
+      // 	      m_order.push_back(input);
+      // 	    }
+      // 	}
+
+      //       for (std::string const &s : m_order)
+      //       {
+      // 	OrderList list;
+      // 	  ss << s;
+      // 	  while (OrderList::parse(list, ss))
+      // 	    {
+      // 	      // Exec
+      // 	      for (size_t i = 0; i < list.size(); ++i)
+      // 		{
+      // 		  m_processes.loadbalance(list.getOrder(i));
+      // 		}
+      // 	    }
+      // 	  ss.str("");
+      // 	  m_order.erase(m_order.begin());
+      // 	}
+      // 	m_order.clear();
+
       if (stdin != -1 && FD_ISSET(stdin, &m_readfds))
 	{
 	  if (!std::getline(std::cin, input, '\n'))
@@ -102,28 +136,18 @@ bool Plazza::loop()
 	  else if (std::cin)
 	    {
 	      // Parse input
-	      m_order.push_back(input);
-	    }
-	}
-      
-      for (std::string const &s : m_order)
-      {
-	OrderList list;
-	  ss << s;
-	  while (OrderList::parse(list, ss))
-	    {
-	      // Exec
-	      for (size_t i = 0; i < list.size(); ++i)
+	      ss << input;
+	      while (OrderList::parse(m_orderList, ss))
 		{
-		  m_processes.loadbalance(list.getOrder(i));
+		  // Exec
+		  for (size_t i = 0; i < m_orderList.size(); ++i)
+		    {
+		      m_processes.loadbalance(m_orderList.getOrder(i));
+		    }
 		}
 	    }
-	  ss.str("");
-	  m_order.erase(m_order.begin());
 	}
-	m_order.clear();
       // Read data coming from processes
-      std::cout << m_processes.getProcesses().size() << std::endl;
       for (std::vector<Process<Comm_t>>::iterator p =
                m_processes.getProcesses().begin();
            p != m_processes.getProcesses().end();)

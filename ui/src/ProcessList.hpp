@@ -36,7 +36,6 @@ public:
   bool addProcess()
   {
     nope::log::Log(Debug) << "Pushing";
-    std::cout << "Added process" << std::endl;
     m_proc.emplace_back(m_threadPerProcess);
     m_proc.back().run();
     nope::log::Log(Debug) << "Added process to process list";
@@ -45,7 +44,6 @@ public:
 
   void removeProcess(Process<T> &p)
   {
-    std::cout << "Removed process" << std::endl;
     nope::log::Log(Debug) << "Removing process from process list";
     p.kill();
     m_proc.erase(std::remove(m_proc.begin(), m_proc.end(), p), m_proc.end());
@@ -117,7 +115,6 @@ public:
 	  {
 	    nope::log::Log(Debug)
 	        << "Couldn't send order, creating a new process";
-		std::cout << "NEW PROCESS" << std::endl;
 	    addProcess();
 	    i = static_cast<std::uint32_t>(m_proc.size());
 	    if (i)

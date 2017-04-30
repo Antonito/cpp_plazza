@@ -182,8 +182,20 @@ public:
 		if (rep.isAvailable() && m_mes.canWrite(true))
 		  {
 
-		    Response resp(ret, 0, 0);
+		    std::vector<bool> const &status = m_pool.getThreadStatus();
+		    uint32_t                 busy = 0;
 
+		    for (bool b : status)
+		      {
+			if (b)
+			  {
+			    ++busy;
+			  }
+		      }
+
+		    uint32_t waiting = m_pool.getNumberTasks();
+
+		    Response resp(ret, busy, waiting);
 		    // TODO: Fill threadpool data here
 		    respPck << resp;
 		    m_mes << respPck;
@@ -197,27 +209,8 @@ public:
       }
     else
       {
-	std::vector<bool> const &status = m_pool.getThreadStatus();
-	uint32_t                 busy = 0;
-
-	for (bool b : status)
-	  {
-	    if (b)
-	      {
-		++busy;
-	      }
-	  }
-
-	uint32_t waiting = 0;
-
-	if (m_pool.getNumberTasks() > m_pool.getNumberThreads())
-	  {
-	    waiting = static_cast<uint32_t>(m_pool.getNumberTasks() -
-	                                    m_pool.getNumberThreads());
-	  }
-
 	// Host part (main process)
-	Response resp(true, busy, waiting);
+	Response resp(true, 42, 42);
 
 	nope::log::Log(Debug)
 	    << "Waiting for response from process [Available ?]";
