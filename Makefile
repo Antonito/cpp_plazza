@@ -69,11 +69,19 @@ clean:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path) clean;)
+			@$(ECHO) "$(YELLOW)./ui/ :$(CLEAR)\n"
+			@$(MAKE) -s -C ./ui/ clean
+			@$(ECHO) "$(WHITE)[$(YELLOW)RM$(WHITE)] Removed OBJs files\n$(CLEAR)"
 
 fclean:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
 			$(MAKE) $(ARGS) $(path) fclean;)
+			@$(ECHO) "$(YELLOW)./ui/ :$(CLEAR)\n"
+			@$(MAKE) -s -C ./ui/ clean
+			@$(ECHO) "$(WHITE)[$(YELLOW)RM$(WHITE)] Removed OBJs files\n$(CLEAR)"
+			@$(RM) ./plazza_ui
+			@$(ECHO) "$(WHITE)[$(YELLOW)RM$(WHITE)] Removed $(CYAN)./plazza_ui\n$(CLEAR)"
 
 re:
 			@$(foreach path, $(PROJECTS),			\
@@ -83,6 +91,12 @@ re:
 infos:
 			@$(foreach path, $(PROJECTS),			\
 			$(PRINT_DIR)					\
-			$(MAKE) $(ARGS) $(path) infos;)
+			$(MAKE) -C $(path) infos;)
 
-.PHONY: all clean fclean re infos $(COMMON) $(EXCEPTIONS) $(MULTITHREAD) $(IPCS) $(CORE)
+ui:
+			@$(ECHO) "$(YELLOW)./ui/ :$(CLEAR)\n"
+			@$(MAKE) -s -C ./ui/ all && \
+			$(ECHO) "$(WHITE)[$(GREEN)OK$(WHITE)] Linked $(CYAN)./plazza_ui\n$(CLEAR)" || \
+			$(ECHO) "$(WHITE)[$(RED)KO$(WHITE)] Linked $(CYAN)./plazza_ui\n$(CLEAR)"
+
+.PHONY: all clean fclean re infos ui $(COMMON) $(EXCEPTIONS) $(MULTITHREAD) $(IPCS) $(CORE)

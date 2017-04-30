@@ -97,8 +97,8 @@ public:
 	      }
 	    catch (std::exception const &e)
 	      {
-		nope::log::Log(Error) << "{" << m_pid
-		                      << "} Error: " << e.what();
+		nope::log::Log(Error)
+		    << "{" << m_pid << "} Error: " << e.what();
 	      }
 	    nope::log::Log(Info) << "Stopping process " << m_pid;
 
@@ -181,32 +181,15 @@ public:
 		respPck >> rep;
 		if (rep.isAvailable() && m_mes.canWrite(true))
 		  {
-		    std::vector<bool> const &status = m_pool.getThreadStatus();
-		    uint32_t busy = 0;
 
-		    for (bool b : status)
-		      {
-			if (b)
-			  {
-			    ++busy;
-			  }
-		      }
-
-		    uint32_t waiting = 0;
-
-		    if (m_pool.getNumberTasks() > m_pool.getNumberThreads())
-		      {
-			waiting = static_cast<uint32_t>(m_pool.getNumberTasks() - m_pool.getNumberThreads());
-		      }
-
-		    Response resp(ret, busy, waiting);
+		    Response resp(ret, 0, 0);
 
 		    // TODO: Fill threadpool data here
 		    respPck << resp;
 		    m_mes << respPck;
 #if defined(DEBUG_VERBOSE)
-		    nope::log::Log(Debug) << "Process " << m_pid
-		                          << " sent response";
+		    nope::log::Log(Debug)
+		        << "Process " << m_pid << " sent response";
 #endif
 		  }
 	      }
@@ -214,8 +197,27 @@ public:
       }
     else
       {
+	std::vector<bool> const &status = m_pool.getThreadStatus();
+	uint32_t                 busy = 0;
+
+	for (bool b : status)
+	  {
+	    if (b)
+	      {
+		++busy;
+	      }
+	  }
+
+	uint32_t waiting = 0;
+
+	if (m_pool.getNumberTasks() > m_pool.getNumberThreads())
+	  {
+	    waiting = static_cast<uint32_t>(m_pool.getNumberTasks() -
+	                                    m_pool.getNumberThreads());
+	  }
+
 	// Host part (main process)
-	Response resp(true, 0, 0);
+	Response resp(true, busy, waiting);
 
 	nope::log::Log(Debug)
 	    << "Waiting for response from process [Available ?]";
@@ -286,8 +288,8 @@ private:
 		    newData = m_mes.read(msgOrder);
 		    if (newData)
 		      {
-			nope::log::Log(Debug) << "Process " << m_pid
-			                      << " got new order";
+			nope::log::Log(Debug)
+			    << "Process " << m_pid << " got new order";
 			msgOrder >> order;
 			m_pool.execute(&Process<T>::treatOrder, this, order);
 		      }
